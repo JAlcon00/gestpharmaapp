@@ -21,6 +21,12 @@ export const environment = {
     appId: "1:987654321098:web:fedcba654321"
   },
   
+  // 🔐 JWT Configuration
+  jwt: {
+    headerName: 'Authorization',
+    tokenPrefix: 'Bearer '
+  },
+  
   endpoints: {
     // Autenticación
     auth: '/usuarios/auth',
