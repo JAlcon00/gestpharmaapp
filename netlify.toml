@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build -- --configuration production"
+  command = "chmod +x scripts/generate-env.sh && ./scripts/generate-env.sh && npm run build -- --configuration production"
   publish = "www"
 
 [build.environment]
