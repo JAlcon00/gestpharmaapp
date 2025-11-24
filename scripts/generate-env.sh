@@ -20,6 +20,11 @@ export const environment = {
     appId: "1:310871799777:web:1e9218cf21dcd956d604a0"
   },
   
+  jwt: {
+    headerName: 'Authorization',
+    tokenPrefix: 'Bearer '
+  },
+  
   endpoints: {
     auth: '/usuarios/auth',
     refreshToken: '/usuarios/refresh',
@@ -68,6 +73,11 @@ export const environment = {
     storageBucket: "${FIREBASE_STORAGE_BUCKET}",
     messagingSenderId: "${FIREBASE_MESSAGING_SENDER_ID}",
     appId: "${FIREBASE_APP_ID}"
+  },
+  
+  jwt: {
+    headerName: 'Authorization',
+    tokenPrefix: 'Bearer '
   },
   
   endpoints: {

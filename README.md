@@ -156,6 +156,16 @@ Usa los archivos `.example.ts` como plantilla.
 
 - [Guía de Configuración](CONFIG.md)
 - [Implementación - Fase 1](IMPLEMENTATION-PHASE-1.md)
+- [Despliegue en Netlify](NETLIFY-DEPLOY.md)
+- [GitHub Actions para CI/CD](.github/GITHUB-ACTIONS-SETUP.md)
+
+## 🚀 Despliegue
+
+### Netlify (Recomendado)
+La aplicación puede desplegarse automáticamente a Netlify usando GitHub Actions:
+- **Producción:** Push a `main` despliega automáticamente
+- **Preview:** Los PRs generan despliegues de preview
+- Ver [Guía de GitHub Actions](.github/GITHUB-ACTIONS-SETUP.md) para configuración completa
 
 ## 🤝 Contribución
 

@@ -1,5 +1,25 @@
 # 🚀 Guía de Despliegue en Netlify
 
+## 🎯 Métodos de Despliegue
+
+Existen tres formas de desplegar esta aplicación a Netlify:
+
+1. **⭐ GitHub Actions (Recomendado)** - Despliegue automático con CI/CD
+   - 👉 Ver [Guía de GitHub Actions](.github/GITHUB-ACTIONS-SETUP.md)
+   - ✅ Despliegue automático en cada push
+   - ✅ Preview deployments para PRs
+   - ✅ Control total sobre el proceso de build
+
+2. **Netlify Git Integration** - Despliegue directo desde Netlify
+   - Ver [Opción A: Despliegue desde Git](#opción-a-despliegue-desde-git-recomendado)
+   - Netlify construye y despliega automáticamente
+
+3. **Netlify CLI** - Despliegue manual desde terminal
+   - Ver [Opción B: Despliegue Manual con CLI](#opción-b-despliegue-manual-con-cli)
+   - Para despliegues ad-hoc o testing
+
+---
+
 ## 📋 Requisitos Previos
 
 - Cuenta en [Netlify](https://app.netlify.com/)
