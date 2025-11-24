@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="dashboard-container ion-padding">
+    <!-- Loading -->
+    @if (loading) {
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando dashboard...</p>
+    </div>
+    }
+
+    <!-- Error -->
+    @if (error && !loading) {
+    <ion-card color="danger">
+      <ion-card-content>
+        <ion-icon name="warning-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadDashboard()" fill="outline" color="light">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+    }
+
+    <!-- KPIs Grid -->
+    @if (dashboardData && !loading) {
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-card class="kpi-card">
+            <ion-card-content>
+              <ion-icon name="trending-up-outline" color="success"></ion-icon>
+              <h2>{{ dashboardData.totalVentasHoy | currency:'MXN':'symbol':'1.2-2' }}</h2>
+              <p>Ventas Hoy</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-card class="kpi-card">
+            <ion-card-content>
+              <ion-icon name="cube-outline" color="primary"></ion-icon>
+              <h2>{{ dashboardData.totalProductos }}</h2>
+              <p>Productos</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-card class="kpi-card" [class.warning]="dashboardData.productosStockBajo > 0">
+            <ion-card-content>
+              <ion-icon name="cart-outline" [color]="dashboardData.productosStockBajo > 0 ? 'warning' : 'medium'"></ion-icon>
+              <h2>{{ dashboardData.productosStockBajo }}</h2>
+              <p>Stock Bajo</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-card class="kpi-card">
+            <ion-card-content>
+              <ion-icon name="people-outline" color="tertiary"></ion-icon>
+              <h2>{{ dashboardData.totalClientes }}</h2>
+              <p>Clientes</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <!-- Ventas Semanales y Mensuales -->
+      <ion-row>
+        <ion-col size="6">
+          <ion-card class="stat-card">
+            <ion-card-content>
+              <p class="stat-label">Ventas Semana</p>
+              <h3>{{ dashboardData.totalVentasSemana | currency:'MXN':'symbol':'1.2-2' }}</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-card class="stat-card">
+            <ion-card-content>
+              <p class="stat-label">Ventas Mes</p>
+              <h3>{{ dashboardData.totalVentasMes | currency:'MXN':'symbol':'1.2-2' }}</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    }
+
+    <!-- Acciones Rápidas -->
+    @if (!loading) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Acciones Rápidas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button expand="block" routerLink="/tabs/pos">
+          <ion-icon name="cart-outline" slot="start"></ion-icon>
+          Nueva Venta
+        </ion-button>
+        
+        <ion-button expand="block" fill="outline" routerLink="/tabs/inventory">
+          <ion-icon name="cube-outline" slot="start"></ion-icon>
+          Ver Inventario
+        </ion-button>
+
+        @if (dashboardData && dashboardData.productosStockBajo > 0) {
+        <ion-button expand="block" fill="outline" routerLink="/tabs/reports" color="warning">
+          <ion-icon name="warning-outline" slot="start"></ion-icon>
+          Ver Productos con Stock Bajo
+        </ion-button>
+        }
+      </ion-card-content>
+    </ion-card>
+    }
+  </div>
+</ion-content>

@@ -1,0 +1,214 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Confirmar Venta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="checkout-container ion-padding">
+    <!-- Resumen del Carrito -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="receipt-outline"></ion-icon>
+          Resumen de la Venta
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          @for (item of cartItems; track item.product.id) {
+          <ion-item lines="none">
+            <ion-label>
+              <h3>{{ item.product.nombre }}</h3>
+              <p>{{ item.quantity }} x {{ item.product.precio | currency:'MXN':'symbol':'1.2-2' }}</p>
+            </ion-label>
+            <ion-note slot="end" class="item-total">
+              {{ item.subtotal | currency:'MXN':'symbol':'1.2-2' }}
+            </ion-note>
+          </ion-item>
+          }
+        </ion-list>
+
+        <div class="total-section">
+          <div class="total-row">
+            <span class="total-label">Total de Items:</span>
+            <span>{{ cartItemCount }}</span>
+          </div>
+          <div class="total-row main-total">
+            <span class="total-label">Total a Pagar:</span>
+            <span class="total-amount">{{ cartTotal | currency:'MXN':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del Cliente (Opcional) -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información del Cliente</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Client Mode Selector -->
+        <ion-segment [value]="clientMode" (ionChange)="onClientModeChange($event)">
+          <ion-segment-button value="none">
+            <ion-label>Sin Cliente</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="existing">
+            <ion-icon name="person-outline"></ion-icon>
+            <ion-label>Cliente Existente</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="new">
+            <ion-icon name="person-add-outline"></ion-icon>
+            <ion-label>Cliente Nuevo</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <!-- Select Existing Client -->
+        @if (clientMode === 'existing') {
+        <div class="client-select">
+          <ion-item>
+            <ion-label position="floating">Seleccionar Cliente</ion-label>
+            <ion-select 
+              [(ngModel)]="selectedClientId"
+              (ionChange)="onClientSelected($event)"
+              interface="popover"
+              placeholder="Seleccione un cliente">
+              @for (client of allClients; track client.id) {
+              <ion-select-option 
+                [value]="client.id">
+                {{ client.nombre }} {{ client.apellido }} {{ client.email ? '(' + client.email + ')' : '' }}
+              </ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+
+          @if (selectedClient) {
+          <div class="selected-client">
+            <ion-card color="success">
+              <ion-card-content>
+                <h3><ion-icon name="checkmark-circle-outline"></ion-icon> Cliente Seleccionado</h3>
+                <p><strong>{{ selectedClient.nombre }} {{ selectedClient.apellido }}</strong></p>
+                @if (selectedClient.email) {
+                <p>{{ selectedClient.email }}</p>
+                }
+                @if (selectedClient.telefono) {
+                <p>{{ selectedClient.telefono }}</p>
+                }
+              </ion-card-content>
+            </ion-card>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- New Client Form -->
+        @if (clientMode === 'new') {
+        <form [formGroup]="checkoutForm">
+          <ion-item>
+            <ion-label position="floating">Nombre *</ion-label>
+            <ion-input 
+              type="text" 
+              formControlName="clienteNombre"
+              placeholder="Juan">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Apellido *</ion-label>
+            <ion-input 
+              type="text" 
+              formControlName="clienteApellido"
+              placeholder="Pérez">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Email *</ion-label>
+            <ion-input 
+              type="email" 
+              formControlName="clienteEmail"
+              placeholder="cliente@email.com">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Teléfono *</ion-label>
+            <ion-input 
+              type="tel" 
+              formControlName="clienteTelefono"
+              placeholder="5512345678">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Dirección</ion-label>
+            <ion-input 
+              type="text" 
+              formControlName="clienteDireccion"
+              placeholder="Calle 123, Colonia...">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">RFC</ion-label>
+            <ion-input 
+              type="text" 
+              formControlName="clienteRfc"
+              placeholder="XAXX010101000">
+            </ion-input>
+          </ion-item>
+        </form>
+        }
+
+        <!-- Observations (always visible) -->
+        <form [formGroup]="checkoutForm">
+          <ion-item>
+            <ion-label position="floating">Observaciones</ion-label>
+            <ion-input 
+              type="text" 
+              formControlName="observaciones"
+              placeholder="Notas adicionales sobre la venta">
+            </ion-input>
+          </ion-item>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Error Message -->
+    @if (error) {
+    <ion-card color="danger">
+      <ion-card-content>
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+      </ion-card-content>
+    </ion-card>
+    }
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <ion-button 
+        expand="block" 
+        size="large"
+        (click)="processSale()"
+        [disabled]="loading || cartItems.length === 0">
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        @if (!loading) {
+        <span>Confirmar Venta</span>
+        }
+        @if (loading) {
+        <ion-spinner name="crescent"></ion-spinner>
+        }
+      </ion-button>
+
+      <ion-button 
+        expand="block" 
+        fill="outline" 
+        color="danger"
+        (click)="confirmCancel()"
+        [disabled]="loading">
+        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+        Cancelar
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

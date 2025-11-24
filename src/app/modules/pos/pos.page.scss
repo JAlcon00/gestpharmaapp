@@ -1,0 +1,174 @@
+.pos-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 300px; // Espacio para el cart summary
+}
+
+.section-title {
+  padding: 16px;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  
+  ion-spinner {
+    margin-bottom: 16px;
+  }
+}
+
+// Product Cards
+.product-card {
+  height: 100%;
+  margin: 0;
+  
+  ion-card-content {
+    padding: 12px;
+  }
+}
+
+.product-info {
+  margin-bottom: 12px;
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--ion-color-dark);
+  }
+  
+  .product-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+    margin: 4px 0;
+  }
+  
+  .product-stock {
+    font-size: 0.85rem;
+    color: var(--ion-color-success);
+    margin: 4px 0;
+    
+    &.low-stock {
+      color: var(--ion-color-warning);
+      font-weight: 600;
+    }
+  }
+}
+
+.product-actions {
+  margin-top: 8px;
+  
+  &.cart-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .quantity {
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 0 16px;
+    }
+    
+    ion-button {
+      flex: 1;
+      max-width: 80px;
+    }
+  }
+}
+
+// Cart Summary (Fixed Bottom)
+.cart-summary {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--ion-color-light);
+  border-top: 2px solid var(--ion-color-medium);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 40vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  
+  h3 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+  }
+  
+  ion-list {
+    background: transparent;
+  }
+  
+  ion-item {
+    --background: var(--ion-color-light);
+    margin-bottom: 8px;
+    
+    .item-total {
+      font-weight: 700;
+      color: var(--ion-color-primary);
+      text-align: right;
+    }
+  }
+}
+
+.cart-total {
+  padding: 16px;
+  background: var(--ion-background-color);
+  border-top: 1px solid var(--ion-color-medium-tint);
+  
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    .total-label {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    
+    .total-amount {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+    }
+  }
+  
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 600;
+  }
+}
+
+// Floating Cart Button
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .cart-summary {
+    max-height: 50vh;
+  }
+  
+  .pos-container {
+    padding-bottom: 0;
+  }
+}

@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>GestPharma</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">
+          <h1>Iniciar Sesión</h1>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <!-- Email -->
+          <ion-item lines="full">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input 
+              type="email" 
+              formControlName="email"
+              placeholder="ejemplo@correo.com"
+              autocomplete="email">
+            </ion-input>
+          </ion-item>
+          <ion-text color="danger" class="error-text" *ngIf="emailError">
+            <small>{{ emailError }}</small>
+          </ion-text>
+
+          <!-- Password -->
+          <ion-item lines="full" class="ion-margin-top">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input 
+              [type]="showPassword ? 'text' : 'password'" 
+              formControlName="password"
+              placeholder="Ingresa tu contraseña"
+              autocomplete="current-password">
+            </ion-input>
+            <ion-icon 
+              slot="end" 
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+              (click)="togglePasswordVisibility()"
+              class="password-toggle">
+            </ion-icon>
+          </ion-item>
+          <ion-text color="danger" class="error-text" *ngIf="passwordError">
+            <small>{{ passwordError }}</small>
+          </ion-text>
+
+          <!-- Error Message -->
+          <ion-text color="danger" class="ion-margin-top" *ngIf="errorMessage">
+            <p class="error-message">{{ errorMessage }}</p>
+          </ion-text>
+
+          <!-- Submit Button -->
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            class="ion-margin-top"
+            [disabled]="loading">
+            <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+            <span *ngIf="!loading">Ingresar</span>
+          </ion-button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider ion-margin-vertical">
+          <span>O continuar con</span>
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <ion-button 
+          expand="block" 
+          fill="outline"
+          color="dark"
+          (click)="onGoogleLogin()"
+          [disabled]="loadingGoogle">
+          <ion-icon slot="start" name="logo-google" *ngIf="!loadingGoogle"></ion-icon>
+          <ion-spinner name="crescent" slot="start" *ngIf="loadingGoogle"></ion-spinner>
+          <span *ngIf="!loadingGoogle">Continuar con Google</span>
+          <span *ngIf="loadingGoogle">Conectando...</span>
+        </ion-button>
+
+        <!-- Info adicional -->
+        <div class="ion-text-center ion-margin-top">
+          <ion-text color="medium">
+            <small>Sistema de Gestión Farmacéutica</small>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

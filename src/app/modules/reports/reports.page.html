@@ -1,0 +1,261 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reportes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="generatePDF()" [disabled]="loading">
+        <ion-icon slot="start" name="download-outline"></ion-icon>
+        <ion-label>PDF</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Segmento para cambiar entre vistas -->
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedView" (ionChange)="onSegmentChange($event)" scrollable>
+      <ion-segment-button value="dashboard">
+        <ion-label>Dashboard</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="sales">
+        <ion-label>Ventas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="products">
+        <ion-label>Top Productos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="inventory">
+        <ion-label>Inventario</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Refrescar -->
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando reporte...</p>
+  </div>
+
+  <!-- Error -->
+  <ion-card *ngIf="error && !loading" color="danger">
+    <ion-card-content>
+      <p>{{ error }}</p>
+      <ion-button (click)="loadDataForView()" size="small">Reintentar</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Dashboard View -->
+  <div *ngIf="selectedView === 'dashboard' && dashboardData && !loading" class="reports-container">
+    <h2 class="section-title">Resumen General</h2>
+
+    <!-- Ventas de Hoy -->
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Ventas de Hoy</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ formatCurrency(dashboardData.totalVentasHoy) }}</div>
+        <div class="stat-subtitle">Ventas realizadas hoy</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Ventas de la Semana -->
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Ventas de la Semana</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ formatCurrency(dashboardData.totalVentasSemana) }}</div>
+        <div class="stat-subtitle">Acumulado semanal</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Ventas del Mes -->
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Ventas del Mes</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ formatCurrency(dashboardData.totalVentasMes) }}</div>
+        <div class="stat-subtitle">Acumulado mensual</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Productos -->
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Inventario</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ dashboardData.totalProductos }}</div>
+        <div class="stat-subtitle">Productos totales</div>
+        <ion-chip *ngIf="dashboardData.productosStockBajo > 0" color="warning" class="alert-chip">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <ion-label>{{ dashboardData.productosStockBajo }} con stock bajo</ion-label>
+        </ion-chip>
+      </ion-card-content>
+    </ion-card>
+
+
+  </div>
+
+  <!-- Sales Report View -->
+  <div *ngIf="selectedView === 'sales' && salesReport && !loading" class="reports-container">
+    <h2 class="section-title">Reporte de Ventas del Mes</h2>
+
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Total de Ventas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ formatCurrency(salesReport.totalVentas) }}</div>
+        <div class="stat-subtitle">{{ salesReport.numeroVentas }} ventas realizadas</div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Ticket Promedio</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ formatCurrency(salesReport.ventaPromedio) }}</div>
+        <div class="stat-subtitle">Por venta</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Gráfico de Ventas -->
+    <ion-card class="chart-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          Tendencia de Ventas
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="chart-container">
+          <canvas #salesChart></canvas>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <!-- Top Products View -->
+  <div *ngIf="selectedView === 'products' && !loading" class="reports-container">
+    <h2 class="section-title">Productos Más Vendidos</h2>
+
+    <!-- Gráfico de Productos -->
+    <ion-card class="chart-card" *ngIf="topProducts.length > 0">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          Ranking de Ventas
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="chart-container chart-horizontal">
+          <canvas #productsChart></canvas>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngFor="let product of topProducts; let i = index" class="product-rank-card">
+      <ion-card-content>
+        <div class="rank-container">
+          <div class="rank-number">{{ i + 1 }}</div>
+          <div class="product-info">
+            <h3>{{ product.nombreProducto }}</h3>
+          </div>
+          <div class="sales-info">
+            <div class="quantity">{{ product.cantidadVendida }} <span>unidades</span></div>
+            <div class="revenue">{{ formatCurrency(product.totalVentas) }}</div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="topProducts.length === 0" class="empty-state">
+      <ion-icon name="cart-outline" size="large"></ion-icon>
+      <h3>Sin datos</h3>
+      <p>No hay productos vendidos en este período</p>
+    </div>
+  </div>
+
+  <!-- Inventory Report View -->
+  <div *ngIf="selectedView === 'inventory' && inventoryReport && !loading" class="reports-container">
+    <h2 class="section-title">Reporte de Inventario</h2>
+
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Productos Totales</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ inventoryReport.totalProductos }}</div>
+        <div class="stat-subtitle">En inventario</div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stat-card">
+      <ion-card-header>
+        <ion-card-title>Valor Total</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stat-value">{{ formatCurrency(inventoryReport.valorTotalInventario) }}</div>
+        <div class="stat-subtitle">En stock</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Gráfico de Inventario -->
+    <ion-card class="chart-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          Estado del Inventario
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="chart-container chart-doughnut">
+          <canvas #inventoryChart></canvas>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Productos con Stock Bajo -->
+    <h3 class="section-subtitle">Productos con Stock Bajo</h3>
+    
+    <ion-card *ngFor="let product of lowStockProducts" class="low-stock-card">
+      <ion-card-content>
+        <div class="low-stock-info">
+          <div>
+            <h3>{{ product.nombre }}</h3>
+            <p class="category">{{ product.categoria || 'Sin categoría' }}</p>
+          </div>
+          <div class="stock-info">
+            <ion-badge [color]="product.stock <= 0 ? 'danger' : 'warning'">
+              Stock: {{ product.stock }}
+            </ion-badge>
+            <p class="min-stock">Mínimo: {{ product.stockMinimo }}</p>
+          </div>
+        </div>
+        <ion-chip color="warning" *ngIf="product.stock > 0 && product.stock <= product.stockMinimo">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <ion-label>Reabastecer pronto</ion-label>
+        </ion-chip>
+        <ion-chip color="danger" *ngIf="product.stock <= 0">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <ion-label>AGOTADO - Reabastecer urgente</ion-label>
+        </ion-chip>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="lowStockProducts.length === 0" class="empty-state">
+      <ion-icon name="cube-outline" size="large"></ion-icon>
+      <h3>Todo en orden</h3>
+      <p>No hay productos con stock bajo</p>
+    </div>
+  </div>
+</ion-content>

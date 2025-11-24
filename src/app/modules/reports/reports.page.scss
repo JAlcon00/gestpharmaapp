@@ -1,0 +1,253 @@
+ion-content {
+  --background: var(--ion-color-light);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  
+  ion-spinner {
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+  }
+}
+
+.reports-container {
+  padding: 16px;
+}
+
+.section-title {
+  color: var(--ion-color-dark);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 8px 0 16px 0;
+  padding-left: 4px;
+}
+
+.section-subtitle {
+  color: var(--ion-color-medium-shade);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 24px 0 12px 0;
+  padding-left: 4px;
+}
+
+.stat-card {
+  margin-bottom: 16px;
+  
+  ion-card-title {
+    font-size: 1rem;
+    color: var(--ion-color-medium-shade);
+    font-weight: 500;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+    margin: 8px 0;
+  }
+  
+  .stat-subtitle {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+  
+  .alert-chip {
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.product-rank-card {
+  margin-bottom: 12px;
+  
+  .rank-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    .rank-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ion-color-primary);
+      min-width: 50px;
+      text-align: center;
+    }
+    
+    .product-info {
+      flex: 1;
+      
+      h3 {
+        margin: 0 0 4px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      
+      .category {
+        margin: 0;
+        color: var(--ion-color-medium);
+        font-size: 0.85rem;
+      }
+    }
+    
+    .sales-info {
+      text-align: right;
+      
+      .quantity {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin-bottom: 4px;
+        
+        span {
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+          font-weight: 400;
+        }
+      }
+      
+      .revenue {
+        color: var(--ion-color-success);
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.low-stock-card {
+  margin-bottom: 12px;
+  
+  .low-stock-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .category {
+      margin: 0;
+      color: var(--ion-color-medium);
+      font-size: 0.85rem;
+    }
+    
+    .stock-info {
+      text-align: right;
+      
+      ion-badge {
+        margin-bottom: 4px;
+      }
+      
+      .min-stock {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+  
+  ion-chip {
+    width: 100%;
+    justify-content: center;
+    margin: 4px 0;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  
+  ion-icon {
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    color: var(--ion-color-dark);
+    margin: 8px 0;
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+}
+
+// Responsive
+@media (min-width: 768px) {
+  .reports-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .section-title,
+  .section-subtitle {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .reports-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// ==========================================
+// ESTILOS PARA GRÁFICOS
+// ==========================================
+
+.chart-card {
+  margin-bottom: 20px;
+  
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    
+    ion-icon {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+.chart-container {
+  position: relative;
+  height: 250px;
+  width: 100%;
+  margin: 0 auto;
+  
+  &.chart-horizontal {
+    height: 400px; // Más alto para gráfico horizontal
+  }
+  
+  &.chart-doughnut {
+    height: 300px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  canvas {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}

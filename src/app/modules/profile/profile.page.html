@@ -1,0 +1,148 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="profile-container" *ngIf="user">
+    <!-- Header con avatar y nombre -->
+    <div class="profile-header">
+      <div class="avatar-container">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </div>
+      <h1 class="user-name">{{ user.nombre }} {{ user.apellido }}</h1>
+      <p class="user-email">{{ user.email }}</p>
+      
+      <div class="chips-container">
+        <ion-chip [color]="user.activo ? 'success' : 'danger'" class="status-chip">
+          <ion-icon [name]="user.activo ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+          <ion-label>{{ user.activo ? 'Activo' : 'Inactivo' }}</ion-label>
+        </ion-chip>
+        
+        <ion-chip [color]="isGoogleUser() ? 'tertiary' : 'medium'" class="auth-type-chip">
+          <ion-icon [name]="isGoogleUser() ? 'logo-google' : 'key-outline'"></ion-icon>
+          <ion-label>{{ isGoogleUser() ? 'Google' : 'Nativo' }}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+    <!-- Información del usuario -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Información Personal
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">Nombre</p>
+              <h3>{{ user.nombre }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">Apellido</p>
+              <h3>{{ user.apellido }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">Correo Electrónico</p>
+              <h3>{{ user.email }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user.role">
+            <ion-icon name="shield-checkmark-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">Rol</p>
+              <h3>{{ user.role?.nombre || 'Sin rol' }}</h3>
+              <p class="role-description" *ngIf="user.role?.descripcion">{{ user.role.descripcion }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="key-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">ID de Usuario</p>
+              <h3>#{{ user.id }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user.createdAt">
+            <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">Fecha de Registro</p>
+              <h3>{{ formatDate(user.createdAt) }}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user.updatedAt">
+            <ion-icon name="time-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <p class="label-title">Última Actualización</p>
+              <h3>{{ formatDate(user.updatedAt) }}</h3>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Estadísticas del usuario (si aplica) -->
+    <ion-card class="stats-card" *ngIf="user.role?.nombre === 'CAJERO' || user.role?.nombre === 'VENDEDOR'">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          Estadísticas
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <ion-icon name="cart-outline" color="primary"></ion-icon>
+            <p class="stat-label">Ventas</p>
+            <h2 class="stat-value">0</h2>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="cash-outline" color="success"></ion-icon>
+            <p class="stat-label">Total</p>
+            <h2 class="stat-value">$0.00</h2>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Acciones -->
+    <div class="actions-container">
+      <ion-button expand="block" fill="outline" color="primary" (click)="editProfile()">
+        <ion-icon name="create-outline" slot="start"></ion-icon>
+        Editar Perfil
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" color="medium" (click)="changePassword()">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        Cambiar Contraseña
+      </ion-button>
+
+      <ion-button expand="block" color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar Sesión
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="!user">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando perfil...</p>
+  </div>
+</ion-content>
