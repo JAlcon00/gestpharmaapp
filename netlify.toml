@@ -1,0 +1,135 @@
+# ============================================
+# 🚀 NETLIFY CONFIGURATION
+# ============================================
+
+[build]
+  # Comando de build
+  command = "npm run build -- --configuration production"
+  
+  # Directorio de publicación
+  publish = "www"
+  
+  # Variables de entorno de build
+  [build.environment]
+    NODE_VERSION = "20"
+    NPM_VERSION = "10"
+
+# ============================================
+# 🔀 REDIRECTS Y REWRITES
+# ============================================
+
+# SPA routing - redirige todas las rutas a index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# API proxy para evitar CORS en desarrollo
+[[redirects]]
+  from = "/api/*"
+  to = "https://tu-api-backend.railway.app/api/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+# ============================================
+# 🔒 HEADERS DE SEGURIDAD
+# ============================================
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Política de seguridad de contenido
+    Content-Security-Policy = """
+      default-src 'self'; 
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.gstatic.com; 
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+      font-src 'self' https://fonts.gstatic.com; 
+      img-src 'self' data: https:; 
+      connect-src 'self' https://apis.google.com https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com;
+      frame-src https://accounts.google.com;
+    """
+    
+    # Protección XSS
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    
+    # Referrer Policy
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Permissions Policy
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Headers para archivos estáticos (cache largo)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ============================================
+# 🌍 CONTEXTOS DE DEPLOY
+# ============================================
+
+# Producción
+[context.production]
+  command = "npm run build --prod"
+  [context.production.environment]
+    NODE_ENV = "production"
+    IONIC_ENV = "production"
+
+# Deploy previews (PRs)
+[context.deploy-preview]
+  command = "npm run build"
+  [context.deploy-preview.environment]
+    NODE_ENV = "development"
+    IONIC_ENV = "development"
+
+# Branch deploys
+[context.branch-deploy]
+  command = "npm run build"
+  [context.branch-deploy.environment]
+    NODE_ENV = "development"
+    IONIC_ENV = "development"
+
+# ============================================
+# 🔧 FUNCIONES SERVERLESS (opcional)
+# ============================================
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# ============================================
+# 📦 PLUGINS (opcional)
+# ============================================
+
+# Plugin para optimización de imágenes
+# [[plugins]]
+#   package = "@netlify/plugin-nextjs"
+
+# ============================================
+# 🔄 SPLIT TESTING (A/B Testing)
+# ============================================
+
+# [[redirects]]
+#   from = "/"
+#   to = "/version-a"
+#   status = 200
+#   conditions = {Cookie = ["experiment=a"]}
+
+# [[redirects]]
+#   from = "/"
+#   to = "/version-b"
+#   status = 200
+#   conditions = {Cookie = ["experiment=b"]}
