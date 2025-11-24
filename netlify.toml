@@ -21,12 +21,3 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-[context.production]
-  command = "npm run build -- --configuration production"
-
-[context.deploy-preview]
-  command = "npm run build -- --configuration production"
-
-[context.branch-deploy]
-  command = "npm run build -- --configuration production"
