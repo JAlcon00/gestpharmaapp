@@ -9,6 +9,11 @@ jobs:
     name: Build and Deploy Preview
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: read
+      pull-requests: write
+      statuses: write
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
