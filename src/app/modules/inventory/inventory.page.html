@@ -45,121 +45,34 @@
   </ion-refresher>
 
   <!-- Vista de Productos -->
-  <div *ngIf="selectedView === 'products'">
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading-container">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando productos...</p>
-    </div>
-
-    <!-- Error -->
-    <ion-card *ngIf="error && !loading" color="danger">
-      <ion-card-content>
-        <p>{{ error }}</p>
-        <ion-button (click)="loadProducts()" size="small">Reintentar</ion-button>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Lista de productos -->
-    <div *ngIf="!loading && !error" class="products-container">
-      <ion-card *ngFor="let product of filteredProducts" class="product-card">
-        <ion-card-header>
-          <div class="card-header-content">
-            <div>
-              <ion-card-title>{{ product.nombre }}</ion-card-title>
-              <p class="category-label">{{ getCategoryName(product.categoriaId!) }}</p>
-            </div>
-            <ion-badge [color]="getStockStatus(product.stock, product.stockMinimo || 10)">
-              {{ getStockLabel(product.stock, product.stockMinimo || 10) }}
-            </ion-badge>
-          </div>
-        </ion-card-header>
-
-        <ion-card-content>
-          <p class="description" *ngIf="product.descripcion">{{ product.descripcion }}</p>
-          
-          <div class="product-info">
-            <div class="info-row">
-              <span class="label">Código:</span>
-              <span class="value">{{ product.codigoBarras || 'N/A' }}</span>
-            </div>
-            <div class="info-row">
-              <span class="label">Precio:</span>
-              <span class="value price">${{ product.precio | number:'1.2-2' }}</span>
-            </div>
-            <div class="info-row">
-              <span class="label">Stock:</span>
-              <span class="value">{{ product.stock }} unidades</span>
-            </div>
-            <div class="info-row">
-              <span class="label">Stock mínimo:</span>
-              <span class="value">{{ product.stockMinimo || 10 }} unidades</span>
-            </div>
-          </div>
-
-          <!-- Alerta de stock bajo -->
-          <ion-chip *ngIf="product.stock <= (product.stockMinimo || 10)" color="warning" class="alert-chip">
-            <ion-icon name="alert-circle-outline"></ion-icon>
-            <ion-label>Stock bajo - Reabastecer</ion-label>
-          </ion-chip>
-
-          <!-- Alerta de agotado -->
-          <ion-chip *ngIf="product.stock <= 0" color="danger" class="alert-chip">
-            <ion-icon name="close-circle"></ion-icon>
-            <ion-label>Producto agotado</ion-label>
-          </ion-chip>
-
-          <!-- Botones de acción -->
-          <div class="action-buttons">
-            <ion-button (click)="editProduct(product)" fill="outline" size="small">
-              <ion-icon slot="start" name="create-outline"></ion-icon>
-              Editar
-            </ion-button>
-            <ion-button (click)="deleteProduct(product)" fill="outline" color="danger" size="small">
-              <ion-icon slot="start" name="trash-outline"></ion-icon>
-              Eliminar
-            </ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
-
-      <!-- Sin productos -->
-      <div *ngIf="filteredProducts.length === 0" class="empty-state">
-        <ion-icon name="alert-circle-outline" size="large"></ion-icon>
-        <h3>No hay productos</h3>
-        <p>{{ searchTerm ? 'No se encontraron resultados' : 'Agrega tu primer producto' }}</p>
-      </div>
-    </div>
-  </div>
+  <app-product-list
+    *ngIf="selectedView === 'products'"
+    [products]="filteredProducts"
+    [categories]="categories"
+    [loading]="loading"
+    [error]="error"
+    (productSelected)="onProductSelected($event)"
+    (editProduct)="onEditProduct($event)"
+    (deleteProduct)="onDeleteProduct($event)"
+    (addProduct)="onAddProduct()"
+    (retry)="onRetryLoad()">
+  </app-product-list>
 
   <!-- Vista de Categorías -->
-  <div *ngIf="selectedView === 'categories'" class="categories-container">
-    <ion-list>
-      <ion-item *ngFor="let category of categories">
-        <ion-label>
-          <h2>{{ category.nombre }}</h2>
-          <p *ngIf="category.descripcion">{{ category.descripcion }}</p>
-        </ion-label>
-        <ion-button slot="end" (click)="editCategory(category)" fill="clear">
-          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-        </ion-button>
-        <ion-button slot="end" (click)="deleteCategory(category)" fill="clear" color="danger">
-          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
-
-    <!-- Sin categorías -->
-    <div *ngIf="categories.length === 0" class="empty-state">
-      <ion-icon name="alert-circle-outline" size="large"></ion-icon>
-      <h3>No hay categorías</h3>
-      <p>Agrega tu primera categoría</p>
-    </div>
-  </div>
+  <app-category-list
+    *ngIf="selectedView === 'categories'"
+    [categories]="categories"
+    [productCountByCategory]="productCountByCategory"
+    [showProductCount]="true"
+    (categorySelected)="onCategorySelected($event)"
+    (editCategory)="onEditCategory($event)"
+    (deleteCategory)="onDeleteCategory($event)"
+    (addCategory)="onAddCategory()">
+  </app-category-list>
 
   <!-- FAB para agregar -->
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="selectedView === 'products' ? addProduct() : addCategory()">
+    <ion-fab-button (click)="selectedView === 'products' ? onAddProduct() : onAddCategory()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

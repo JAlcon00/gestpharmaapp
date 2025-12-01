@@ -1,134 +1,78 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { CartStore, CartItem } from '../core/stores';
 import { Product } from '../core/models';
 
-export interface CartItem {
-  product: Product;
-  quantity: number;
-  subtotal: number;
-}
+// Re-export para compatibilidad
+export { CartItem };
 
+/**
+ * CartService - Fachada para el CartStore
+ *
+ * Este servicio mantiene compatibilidad con el código existente
+ * mientras delega la lógica de estado al CartStore (NgRx-lite pattern).
+ *
+ * DEPRECATED: Considera usar CartStore directamente en nuevos componentes.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
-  public cartItems$ = this.cartItemsSubject.asObservable();
+  private cartStore = inject(CartStore);
 
-  constructor() {
-    this.loadCartFromStorage();
-  }
 
   /**
-   * Carga el carrito desde localStorage
+   * Observable de items del carrito
    */
-  private loadCartFromStorage(): void {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        const items = JSON.parse(savedCart);
-        this.cartItemsSubject.next(items);
-      } catch (error) {
-        console.error('Error cargando carrito:', error);
-      }
-    }
+  get cartItems$(): Observable<CartItem[]> {
+    return this.cartStore.items$;
   }
 
   /**
-   * Guarda el carrito en localStorage
-   */
-  private saveCartToStorage(): void {
-    localStorage.setItem('cart', JSON.stringify(this.cartItemsSubject.value));
-  }
-
-  /**
-   * Obtiene los items del carrito
+   * Obtiene los items del carrito (síncrono)
    */
   getItems(): CartItem[] {
-    return this.cartItemsSubject.value;
+    return this.cartStore.getCurrentItems();
   }
 
   /**
    * Agrega un producto al carrito
    */
   addItem(product: Product, quantity: number = 1): void {
-    console.log('🛒 CartService.addItem - Product:', {
-      id: product.id,
-      nombre: product.nombre,
-      precio: product.precio,
-      quantity
-    });
-    
-    const currentItems = this.getItems();
-    const existingItemIndex = currentItems.findIndex(item => item.product.id === product.id);
-
-    if (existingItemIndex !== -1) {
-      // Si el producto ya existe, incrementar cantidad
-      currentItems[existingItemIndex].quantity += quantity;
-      currentItems[existingItemIndex].subtotal = 
-        currentItems[existingItemIndex].quantity * currentItems[existingItemIndex].product.precio;
-      console.log('✏️ Updated existing item:', currentItems[existingItemIndex]);
-    } else {
-      // Si es nuevo, agregarlo
-      const newItem = {
-        product,
-        quantity,
-        subtotal: product.precio * quantity
-      };
-      console.log('➕ Adding new item:', newItem);
-      currentItems.push(newItem);
-    }
-
-    this.cartItemsSubject.next(currentItems);
-    this.saveCartToStorage();
-    console.log('💾 Cart saved. Total items:', currentItems.length);
+    this.cartStore.addItem(product, quantity);
   }
 
   /**
    * Actualiza la cantidad de un item
    */
   updateQuantity(productId: number, quantity: number): void {
-    const currentItems = this.getItems();
-    const itemIndex = currentItems.findIndex(item => item.product.id === productId);
-
-    if (itemIndex !== -1) {
-      if (quantity <= 0) {
-        this.removeItem(productId);
-      } else {
-        currentItems[itemIndex].quantity = quantity;
-        currentItems[itemIndex].subtotal = quantity * currentItems[itemIndex].product.precio;
-        this.cartItemsSubject.next(currentItems);
-        this.saveCartToStorage();
-      }
-    }
+    this.cartStore.updateQuantity(productId, quantity);
   }
 
   /**
    * Remueve un item del carrito
    */
   removeItem(productId: number): void {
-    const currentItems = this.getItems().filter(item => item.product.id !== productId);
-    this.cartItemsSubject.next(currentItems);
-    this.saveCartToStorage();
+    this.cartStore.removeItem(productId);
   }
 
   /**
    * Limpia el carrito
    */
   clear(): void {
-    this.cartItemsSubject.next([]);
-    localStorage.removeItem('cart');
+    this.cartStore.clear();
   }
 
   /**
-   * Obtiene el total del carrito
+   * Obtiene el total del carrito (síncrono)
    */
   getTotal(): number {
+    // Para compatibilidad, calculamos del estado actual
     return this.getItems().reduce((total, item) => total + item.subtotal, 0);
   }
 
   /**
-   * Obtiene la cantidad total de items
+   * Obtiene la cantidad total de items (síncrono)
    */
   getItemCount(): number {
     return this.getItems().reduce((count, item) => count + item.quantity, 0);
@@ -139,5 +83,26 @@ export class CartService {
    */
   isEmpty(): boolean {
     return this.getItems().length === 0;
+  }
+
+  /**
+   * Observable del total del carrito
+   */
+  get total$(): Observable<number> {
+    return this.cartStore.total$;
+  }
+
+  /**
+   * Observable del conteo de items
+   */
+  get itemCount$(): Observable<number> {
+    return this.cartStore.itemCount$;
+  }
+
+  /**
+   * Observable del estado vacío
+   */
+  get isEmpty$(): Observable<boolean> {
+    return this.cartStore.isEmpty$;
   }
 }

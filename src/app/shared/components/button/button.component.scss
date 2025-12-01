@@ -1,0 +1,97 @@
+// Design tokens are available as CSS custom properties from global.scss
+
+.app-button {
+  --border-radius: var(--radius-md);
+  --padding-start: var(--spacing-base);
+  --padding-end: var(--spacing-base);
+  --transition: all var(--duration-base) var(--ease-out);
+  font-weight: var(--font-weight-semibold);
+
+  /* ━━━ TAMAÑOS ━━━ */
+  &--small {
+    --padding-start: var(--spacing-sm);
+    --padding-end: var(--spacing-sm);
+    --padding-top: var(--spacing-xs);
+    --padding-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    min-height: 36px;
+  }
+
+  &--medium {
+    --padding-start: var(--spacing-base);
+    --padding-end: var(--spacing-base);
+    --padding-top: var(--spacing-sm);
+    --padding-bottom: var(--spacing-sm);
+    font-size: var(--font-size-base);
+    min-height: 44px; /* Área táctil mínima */
+  }
+
+  &--large {
+    --padding-start: var(--spacing-lg);
+    --padding-end: var(--spacing-lg);
+    --padding-top: var(--spacing-base);
+    --padding-bottom: var(--spacing-base);
+    font-size: var(--font-size-lg);
+    min-height: 56px;
+  }
+
+  /* ━━━ ANIMACIONES ━━━ */
+  &:not([disabled]):active {
+    transform: scale(0.98);
+    transition: transform 100ms ease-out;
+  }
+
+  /* ━━━ ESTADOS DE FOCO (ACCESIBILIDAD) ━━━ */
+  &:focus-visible {
+    outline: 3px solid var(--color-brand-secondary);
+    outline-offset: 2px;
+    box-shadow: var(--shadow-outline);
+  }
+
+  /* ━━━ ESTADO DE CARGA ━━━ */
+  &--loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* ━━━ ELEMENTOS INTERNOS ━━━ */
+  &__spinner {
+    width: 18px;
+    height: 18px;
+  }
+
+  &__icon {
+    font-size: 1.2em;
+
+    &--start {
+      margin-inline-end: var(--spacing-xs);
+    }
+
+    &--end {
+      margin-inline-start: var(--spacing-xs);
+    }
+  }
+
+  &__content {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* ━━━ VARIANTES ESPECIALES ━━━ */
+.app-button--link {
+  text-decoration: underline;
+  --padding-start: var(--spacing-xs);
+  --padding-end: var(--spacing-xs);
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.app-button--ghost {
+  &:hover {
+    background-color: var(--bg-hover);
+  }
+}

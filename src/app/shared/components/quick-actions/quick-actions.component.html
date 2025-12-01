@@ -1,0 +1,25 @@
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" class="quick-actions-fab">
+  <ion-fab-button class="fab-main">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+
+  <ion-fab-list side="top">
+    <ion-fab-button class="fab-action fab-action--primary" routerLink="/tabs/pos" title="Nueva Venta (Ctrl+N)">
+      <ion-icon name="cart-outline"></ion-icon>
+      <ion-label>Nueva Venta</ion-label>
+      <span class="keyboard-shortcut">Ctrl+N</span>
+    </ion-fab-button>
+
+    <ion-fab-button class="fab-action fab-action--secondary" routerLink="/tabs/inventory" title="Agregar Producto (Ctrl+P)">
+      <ion-icon name="cube-outline"></ion-icon>
+      <ion-label>Agregar Producto</ion-label>
+      <span class="keyboard-shortcut">Ctrl+P</span>
+    </ion-fab-button>
+
+    <ion-fab-button class="fab-action fab-action--success" routerLink="/tabs/reports" title="Ver Reportes (Ctrl+R)">
+      <ion-icon name="stats-chart-outline"></ion-icon>
+      <ion-label>Ver Reportes</ion-label>
+      <span class="keyboard-shortcut">Ctrl+R</span>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>

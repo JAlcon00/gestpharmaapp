@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -78,7 +78,9 @@ Chart.register(...registerables);
     IonButtons
   ]
 })
-export class ReportsPage implements OnInit, AfterViewInit {
+export class ReportsPage implements OnInit {
+  private reportService = inject(ReportService);
+
   @ViewChild('salesChart') salesChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('productsChart') productsChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('inventoryChart') inventoryChartRef!: ElementRef<HTMLCanvasElement>;
@@ -105,7 +107,7 @@ export class ReportsPage implements OnInit, AfterViewInit {
   loading: boolean = false;
   error: string = '';
 
-  constructor(private reportService: ReportService) {
+  constructor() {
     addIcons({ 
       trendingUpOutline,
       trendingDownOutline,
@@ -120,10 +122,6 @@ export class ReportsPage implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadDashboard();
-  }
-
-  ngAfterViewInit() {
-    // Los gráficos se crearán después de cargar datos
   }
 
   onSegmentChange(event: any) {

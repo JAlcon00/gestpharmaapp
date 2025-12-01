@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -50,19 +50,18 @@ import { AuthService } from '../../core/services/auth.service';
   ]
 })
 export class LoginPage implements OnInit {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private toastController = inject(ToastController);
+
   loginForm!: FormGroup;
   loading = false;
-  loadingGoogle = false;
   errorMessage = '';
   showPassword = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastController: ToastController
-  ) {
+  constructor() {
     addIcons({ mailOutline, lockClosedOutline, eyeOutline, eyeOffOutline, logoGoogle });
   }
 
@@ -70,6 +69,7 @@ export class LoginPage implements OnInit {
     // Si ya está autenticado, redirigir al home
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/tabs']);
+      return;
     }
 
     this.loginForm = this.fb.group({
@@ -159,18 +159,18 @@ export class LoginPage implements OnInit {
    * Login con Google
    */
   onGoogleLogin() {
-    this.loadingGoogle = true;
+    this.loading = true;
     this.errorMessage = '';
 
     this.authService.loginWithGoogle().subscribe({
       next: (response) => {
         console.log('✅ Login con Google exitoso:', response);
-        this.loadingGoogle = false;
+        this.loading = false;
         this.router.navigate(['/tabs']);
       },
       error: (error) => {
         console.error('❌ Error en login con Google:', error);
-        this.loadingGoogle = false;
+        this.loading = false;
         this.errorMessage = error.message || 'Error al iniciar sesión con Google';
       }
     });

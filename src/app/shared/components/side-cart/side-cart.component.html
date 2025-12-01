@@ -1,0 +1,96 @@
+<div class="side-cart" [class.side-cart--open]="isOpen">
+  <!-- Cart Header -->
+  <div class="side-cart__header">
+    <div class="cart-header-content">
+      <h3 class="cart-title">
+        <ion-icon name="cart-outline"></ion-icon>
+        Carrito de Compras
+      </h3>
+      <span class="cart-count" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+    </div>
+    <ion-button fill="clear" size="small" (click)="closeCart()">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Client Selection -->
+  @if (cartItems.length > 0) {
+  <div class="side-cart__client">
+    <ion-item lines="none">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label>Cliente</ion-label>
+      <ion-select [(ngModel)]="selectedClientId" placeholder="Seleccionar" interface="popover">
+        <ion-select-option [value]="null">General</ion-select-option>
+        @for (client of clients; track client.id) {
+          <ion-select-option [value]="client.id">{{ client.nombre }} {{ client.apellido }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  </div>
+  }
+
+  <!-- Cart Content -->
+  <div class="side-cart__content">
+    @if (cartItems.length === 0) {
+    <!-- Empty State -->
+    <div class="cart-empty">
+      <div class="empty-icon">
+        <ion-icon name="cart-outline"></ion-icon>
+      </div>
+      <h4>Carrito vacío</h4>
+      <p>Agrega productos para comenzar</p>
+    </div>
+    } @else {
+    <!-- Cart Items -->
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of cartItems">
+        <div class="item-image">
+          <ion-icon [name]="getProductIcon(item.product.nombre)"></ion-icon>
+        </div>
+
+        <div class="item-details">
+          <h4 class="item-name">{{ item.product.nombre }}</h4>
+          <p class="item-price">{{ item.product.precio | currency:'MXN':'symbol':'1.2-2' }}</p>
+          <div class="item-quantity-controls">
+        <ion-button size="small" fill="outline" (click)="onDecrementItem(item.product.id)">
+          <ion-icon name="remove-outline"></ion-icon>
+        </ion-button>
+        <span class="quantity">{{ item.quantity }}</span>
+        <ion-button size="small" fill="outline" (click)="onIncrementItem(item.product.id)"
+          [disabled]="item.quantity >= item.product.stock">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <p class="item-subtotal">{{ item.subtotal | currency:'MXN':'symbol':'1.2-2' }}</p>
+          <ion-button fill="clear" color="danger" size="small" (click)="onRemoveItem(item.product.id)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Cart Footer -->
+  @if (cartItems.length > 0) {
+  <div class="side-cart__footer">
+    <div class="cart-total">
+      <div class="total-row">
+        <span class="total-label">Total:</span>
+        <span class="total-amount">{{ cartTotal | currency:'MXN':'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <ion-button expand="block" size="large" (click)="onProceedToCheckout()">
+      <ion-icon name="card-outline" slot="start"></ion-icon>
+      Proceder al Pago
+    </ion-button>
+  </div>
+  }
+</div>
+
+<!-- Backdrop -->
+<div class="side-cart-backdrop" [class.side-cart-backdrop--visible]="isOpen" (click)="closeCart()"></div>

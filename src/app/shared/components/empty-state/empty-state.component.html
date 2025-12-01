@@ -1,0 +1,39 @@
+<div class="empty-state empty-state--{{ type }}" role="status" [attr.aria-label]="title">
+  <!-- Ilustración SVG personalizada -->
+  <div class="empty-state__illustration">
+    <div class="illustration-container" [innerHTML]="getIllustration()"></div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="empty-state__content">
+    <!-- Título empático -->
+    <h3 class="empty-state__title">{{ title }}</h3>
+
+    <!-- Descripción útil -->
+    <p class="empty-state__description" *ngIf="description">
+      {{ description }}
+    </p>
+
+    <!-- Acciones -->
+    <div class="empty-state__actions">
+      <!-- Acción principal -->
+      <app-button
+        *ngIf="actionLabel"
+        [variant]="actionVariant"
+        [iconStart]="actionIcon"
+        [attr.aria-label]="actionLabel"
+        (clicked)="actionClick.emit()">
+        {{ actionLabel }}
+      </app-button>
+
+      <!-- Acción secundaria -->
+      <app-button
+        *ngIf="secondaryActionLabel"
+        variant="ghost"
+        [iconStart]="secondaryActionIcon"
+        (clicked)="secondaryActionClick.emit()">
+        {{ secondaryActionLabel }}
+      </app-button>
+    </div>
+  </div>
+</div>

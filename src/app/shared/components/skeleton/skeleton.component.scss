@@ -1,0 +1,241 @@
+// Skeleton Component - Placeholders animados para carga
+.skeleton {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+
+  &__content {
+    width: 100%;
+    height: 100%;
+
+    &--animated {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        animation: skeleton-shimmer 1.5s infinite;
+      }
+    }
+  }
+
+  // Elementos base del skeleton
+  &-line {
+    height: var(--font-size-base);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-xs);
+    margin-bottom: var(--spacing-sm);
+
+    &--title {
+      height: var(--font-size-xl);
+      width: 70%;
+      margin-bottom: var(--spacing-md);
+    }
+
+    &--subtitle {
+      height: var(--font-size-sm);
+      width: 50%;
+    }
+
+    &--medium {
+      height: var(--font-size-base);
+      width: 80%;
+    }
+
+    &--short {
+      height: var(--font-size-sm);
+      width: 60%;
+    }
+  }
+
+  // Card skeleton
+  &-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+
+    &__image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    &__content {
+      flex: 1;
+    }
+  }
+
+  // List item skeleton
+  &-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    border: 1px solid var(--border-light);
+
+    &-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-full);
+      margin-right: var(--spacing-md);
+      flex-shrink: 0;
+    }
+
+    &__content {
+      flex: 1;
+    }
+  }
+
+  // Chart skeleton
+  &-chart {
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+
+    &__header {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    &__body {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      height: 120px;
+      gap: var(--spacing-xs);
+    }
+  }
+
+  &-bar {
+    flex: 1;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-xs);
+    min-height: 20px;
+  }
+
+  // Table skeleton
+  &-table {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+
+    &__header,
+    &__row {
+      display: flex;
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--border-light);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    &__header {
+      background: var(--bg-tertiary);
+      border-bottom: 2px solid var(--border-medium);
+    }
+  }
+
+  &-cell {
+    flex: 1;
+    height: var(--font-size-base);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-xs);
+    margin: 0 var(--spacing-xs);
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// Animación shimmer
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .skeleton {
+    &-card {
+      padding: var(--spacing-md);
+
+      &__image {
+        margin-bottom: var(--spacing-sm);
+      }
+    }
+
+    &-item {
+      padding: var(--spacing-sm);
+    }
+
+    &-chart {
+      padding: var(--spacing-md);
+
+      &__body {
+        height: 100px;
+      }
+    }
+
+    &-table {
+      &__header,
+      &__row {
+        padding: var(--spacing-sm);
+      }
+    }
+  }
+}
+
+// Dark mode adjustments
+@media (prefers-color-scheme: dark) {
+  .skeleton {
+    &-line,
+    &-card__image,
+    &-item-avatar,
+    &-bar,
+    &-cell {
+      background: var(--bg-disabled);
+    }
+
+    &-card,
+    &-item,
+    &-chart,
+    &-table {
+      background: var(--bg-tertiary);
+      border-color: var(--border-medium);
+    }
+
+    &-table__header {
+      background: var(--bg-disabled);
+    }
+  }
+}

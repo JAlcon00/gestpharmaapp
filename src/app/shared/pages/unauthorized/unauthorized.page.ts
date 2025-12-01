@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonHeader, 
@@ -40,7 +40,9 @@ import { lockClosedOutline } from 'ionicons/icons';
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonText]
 })
 export class UnauthorizedPage {
-  constructor(private router: Router) {
+  private router = inject(Router);
+
+  constructor() {
     addIcons({ lockClosedOutline });
   }
 

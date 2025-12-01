@@ -78,11 +78,11 @@
           fill="outline"
           color="dark"
           (click)="onGoogleLogin()"
-          [disabled]="loadingGoogle">
-          <ion-icon slot="start" name="logo-google" *ngIf="!loadingGoogle"></ion-icon>
-          <ion-spinner name="crescent" slot="start" *ngIf="loadingGoogle"></ion-spinner>
-          <span *ngIf="!loadingGoogle">Continuar con Google</span>
-          <span *ngIf="loadingGoogle">Conectando...</span>
+          [disabled]="loading">
+          <ion-icon slot="start" name="logo-google" *ngIf="!loading"></ion-icon>
+          <ion-spinner name="crescent" slot="start" *ngIf="loading"></ion-spinner>
+          <span *ngIf="!loading">Continuar con Google</span>
+          <span *ngIf="loading">Conectando...</span>
         </ion-button>
 
         <!-- Info adicional -->

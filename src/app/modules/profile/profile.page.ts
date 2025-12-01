@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonHeader, 
@@ -67,13 +67,13 @@ import { CommonModule } from '@angular/common';
   ]
 })
 export class ProfilePage implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private alertController = inject(AlertController);
+
   user: any = null;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private alertController: AlertController
-  ) {
+  constructor() {
     addIcons({ 
       logOutOutline, 
       personCircleOutline,

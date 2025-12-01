@@ -1,0 +1,34 @@
+<div class="kpi-card kpi-card--{{ type }}" [class.kpi-card--hero]="isHero">
+  <div class="kpi-card__icon">
+    <ion-icon [name]="icon" class="kpi-card__icon-main"></ion-icon>
+    <div class="kpi-card__glow" [style.background]="glowColor"></div>
+  </div>
+
+  <div class="kpi-card__content">
+    <p class="kpi-card__label">{{ label }}</p>
+    <h2 class="kpi-card__value" #counter [attr.data-countup]="value">{{ displayValue }}</h2>
+
+    @if (trend !== undefined) {
+    <div class="kpi-card__trend"
+         [class.kpi-card__trend--positive]="trend > 0"
+         [class.kpi-card__trend--negative]="trend < 0"
+         [class.kpi-card__trend--neutral]="trend === 0">
+      <span class="trend-icon">{{ trend > 0 ? '▲' : trend < 0 ? '▼' : '●' }}</span>
+      <span class="trend-value">{{ trend > 0 ? '+' : '' }}{{ trend | number:'1.1-1' }}%</span>
+      <span class="trend-label">{{ trendLabel || 'vs ayer' }}</span>
+    </div>
+    }
+
+    @if (subtitle) {
+    <p class="kpi-card__subtitle">{{ subtitle }}</p>
+    }
+  </div>
+
+  @if (sparklineData && sparklineData.length > 0) {
+  <div class="kpi-card__sparkline">
+    <svg class="sparkline" viewBox="0 0 80 20" preserveAspectRatio="none">
+      <path [attr.d]="sparklinePath" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  }
+</div>

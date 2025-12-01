@@ -1,0 +1,100 @@
+// Design tokens are available as CSS custom properties from global.scss
+
+.app-card {
+  margin: var(--margin-item);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-base) var(--ease-out);
+  overflow: hidden;
+
+  /* ━━━ VARIANTES ━━━ */
+  &--elevated {
+    box-shadow: var(--shadow-md);
+    border: none;
+
+    &:hover:not(.app-card--loading) {
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  &--outlined {
+    border: 1px solid var(--border-light);
+    box-shadow: none;
+
+    &:hover:not(.app-card--loading) {
+      border-color: var(--border-medium);
+    }
+  }
+
+  &--flat {
+    box-shadow: none;
+    border: none;
+    background-color: var(--bg-secondary);
+  }
+
+  /* ━━━ CLICKEABLE ━━━ */
+  &--clickable {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover:not(.app-card--loading) {
+      transform: translateY(-4px);
+    }
+
+    &:active:not(.app-card--loading) {
+      transform: translateY(-2px);
+      transition: transform 100ms ease-out;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-brand-secondary);
+      outline-offset: 2px;
+    }
+  }
+
+  /* ━━━ LOADING STATE ━━━ */
+  &--loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* ━━━ SECCIONES ━━━ */
+  &__header {
+    padding: var(--spacing-base);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  &__content {
+    padding: var(--spacing-base);
+  }
+
+  &__footer {
+    padding: var(--spacing-base);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background-color: var(--bg-secondary);
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  &__body {
+    animation: fadeIn 300ms ease-in;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

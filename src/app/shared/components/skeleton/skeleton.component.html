@@ -1,0 +1,55 @@
+<div class="skeleton" [class]="'skeleton--' + variant" [style.width]="width" [style.height]="height">
+  <div class="skeleton__content" [class.skeleton__content--animated]="animated">
+    <!-- Para texto -->
+    <ng-container *ngIf="variant === 'text'">
+      <div class="skeleton-line" *ngFor="let line of linesArray" [style.width.%]="getLineWidth(line)"></div>
+    </ng-container>
+
+    <!-- Para cards -->
+    <ng-container *ngIf="variant === 'card'">
+      <div class="skeleton-card">
+        <div class="skeleton-card__image"></div>
+        <div class="skeleton-card__content">
+          <div class="skeleton-line skeleton-line--title"></div>
+          <div class="skeleton-line skeleton-line--subtitle"></div>
+          <div class="skeleton-line skeleton-line--short"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Para listas -->
+    <ng-container *ngIf="variant === 'list'">
+      <div class="skeleton-item" *ngFor="let item of itemsArray">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-item__content">
+          <div class="skeleton-line skeleton-line--medium"></div>
+          <div class="skeleton-line skeleton-line--short"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Para gráficos -->
+    <ng-container *ngIf="variant === 'chart'">
+      <div class="skeleton-chart">
+        <div class="skeleton-chart__header">
+          <div class="skeleton-line skeleton-line--medium"></div>
+        </div>
+        <div class="skeleton-chart__body">
+          <div class="skeleton-bar" *ngFor="let bar of [1,2,3,4,5]" [style.height.%]="getBarHeight(bar)"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Para tablas -->
+    <ng-container *ngIf="variant === 'table'">
+      <div class="skeleton-table">
+        <div class="skeleton-table__header">
+          <div class="skeleton-cell" *ngFor="let cell of tableColumnsArray"></div>
+        </div>
+        <div class="skeleton-table__row" *ngFor="let row of tableRowsArray">
+          <div class="skeleton-cell" *ngFor="let cell of tableColumnsArray" [style.width.%]="getCellWidth(cell)"></div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

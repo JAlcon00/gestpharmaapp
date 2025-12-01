@@ -1,30 +1,51 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 import { environment } from '../../environments/environment';
 import { Product, Category, ProductCreateRequest, ProductUpdateRequest, PagedResponse } from '../core/models';
+import { retryWithBackoff, cacheWithTTL, logWithContext, mapErrorMessages } from '../core/rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private readonly endpoint = environment.endpoints.productos;
+  private apiService = inject(ApiService);
 
-  constructor(private apiService: ApiService) {}
+  private readonly endpoint = environment.endpoints.productos;
 
   /**
    * Obtiene todos los productos
    * Nota: El backend puede devolver array directo o PagedResponse
    */
   getAll(params?: { page?: number; size?: number; sort?: string }): Observable<PagedResponse<Product> | Product[]> {
-    return this.apiService.get<PagedResponse<Product> | Product[]>(this.endpoint, params);
+    return this.apiService.get<PagedResponse<Product> | Product[]>(this.endpoint, params)
+      .pipe(
+        retryWithBackoff(2, 500, 1.5),
+        cacheWithTTL('products', 2 * 60 * 1000), // 2 minutos
+        logWithContext('ProductService.getAll'),
+        mapErrorMessages({
+          '404': 'Productos no encontrados',
+          '500': 'Error del servidor al cargar productos',
+          'default': 'Error al cargar productos'
+        })
+      );
   }
 
   /**
    * Obtiene un producto por ID
    */
   getById(id: number): Observable<Product> {
-    return this.apiService.get<Product>(`${this.endpoint}/${id}`);
+    return this.apiService.get<Product>(`${this.endpoint}/${id}`)
+      .pipe(
+        retryWithBackoff(2, 300, 2),
+        cacheWithTTL(`product_${id}`, 5 * 60 * 1000), // 5 minutos
+        logWithContext(`ProductService.getById(${id})`),
+        mapErrorMessages({
+          '404': 'Producto no encontrado',
+          '500': 'Error del servidor al cargar producto',
+          'default': 'Error al cargar producto'
+        })
+      );
   }
 
   /**
