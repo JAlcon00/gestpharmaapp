@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 import { environment } from '../../environments/environment';
@@ -16,9 +16,9 @@ import {
   providedIn: 'root'
 })
 export class ReportService {
-  private readonly endpoint = environment.endpoints.reportes;
+  private apiService = inject(ApiService);
 
-  constructor(private apiService: ApiService) {}
+  private readonly endpoint = environment.endpoints.reportes;
 
   /**
    * Obtiene el dashboard general con KPIs

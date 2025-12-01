@@ -4,12 +4,22 @@
 
 # Variables de entorno y configuración sensible
 .env
+.env.*
+!.env.example
 .env.local
 .env.*.local
 .env.production
 src/environments/environment.ts
 src/environments/environment.prod.ts
 src/environments/*.local.ts
+!src/environments/*.example.ts
+
+# Credenciales y secrets
+*credentials*
+*secret*
+*password*
+*.key
+*.pem
 
 # Firebase y claves API
 firebase.json
@@ -19,12 +29,16 @@ firestore.debug.log
 firestore-debug.log
 google-services.json
 GoogleService-Info.plist
+firebase-adminsdk*.json
 
 # Capacitor
 capacitor.config.ts
 capacitor.config.json
+!capacitor.config.example.ts
 ios/App/App/capacitor.config.json
 android/app/capacitor.config.json
+android/app/google-services.json
+ios/App/GoogleService-Info.plist
 
 # ============================================
 # 📦 DEPENDENCIAS
@@ -57,12 +71,45 @@ lerna-debug.log*
 /platforms
 /plugins
 android/
+!android/.gitignore
+!android/build.gradle
+!android/capacitor.settings.gradle
+!android/gradle.properties
+!android/gradlew
+!android/gradlew.bat
+!android/settings.gradle
+!android/variables.gradle
+!android/app/
+!android/gradle/
 ios/
-*.apk
-*.ipa
-*.aab
-
+!ios/.gitignore
 # ============================================
+# 💻 IDEs Y EDITORES
+# ============================================
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# IntelliJ / WebStorm
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~====================================
 # 🧪 TESTING
 # ============================================
 /coverage
@@ -78,9 +125,43 @@ karma-test-results.xml
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+# System files
+.DS_Store
+Thumbs.db
+*.log
 
+# ============================================
+# 🚀 DEPLOYMENT Y LOGS
+# ============================================
+# Logs de deployment
+deploy.log
+*.deploy.log
+build.log
+
+# Netlify
+.netlify
+
+# Vercel
+.vercel
+
+# ============================================
+# 📊 DATOS SENSIBLES DE LA APP
+# ============================================
+# Backups y exports
+backups/
+exports/
+*.backup
+*.csv
+*.xlsx
+*.xls
+
+# Screenshots con información sensible
+screenshots/
+!cypress/screenshots/
+
+# Datos de prueba con información real
+*-real-data.*
+*-production-data.*
 
 # Miscellaneous
 /.angular

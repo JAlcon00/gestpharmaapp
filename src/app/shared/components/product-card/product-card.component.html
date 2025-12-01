@@ -1,0 +1,79 @@
+<div class="product-card" [class.product-card--in-cart]="isInCart" [class.product-card--low-stock]="product.stock < 10" [class.product-card--out-of-stock]="product.stock === 0">
+  <!-- Product Image Placeholder -->
+  <div class="product-card__image">
+    <div class="product-image-placeholder">
+      <ion-icon [name]="getProductIcon(product.nombre)" class="product-icon"></ion-icon>
+    </div>
+
+    <!-- Stock Badge -->
+    <div class="product-badge" [class]="'product-badge--' + getStockStatus(product.stock)">
+      <ion-icon [name]="getStockIcon(product.stock)" size="small"></ion-icon>
+      <span>{{ product.stock }}</span>
+    </div>
+
+    <!-- Discount Badge (if applicable) -->
+    <div class="product-discount" *ngIf="hasDiscount">
+      <span>-{{ discountPercent }}%</span>
+    </div>
+  </div>
+
+  <!-- Product Info -->
+  <div class="product-card__content">
+    <div class="product-info">
+      <h3 class="product-name">{{ product.nombre }}</h3>
+      <p class="product-category" *ngIf="product.categoria?.nombre">
+        {{ product.categoria?.nombre }}
+      </p>
+
+      <div class="product-pricing">
+        <span class="product-price">{{ product.precio | currency:'MXN':'symbol':'1.2-2' }}</span>
+        <span class="product-original-price" *ngIf="hasDiscount">
+          {{ originalPrice | currency:'MXN':'symbol':'1.2-2' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="product-actions">
+      <!-- Add to Cart Button -->
+      <ion-button
+        class="add-to-cart-btn"
+        *ngIf="!isInCart && product.stock > 0"
+        (click)="onAddToCart()"
+        expand="block"
+        size="default">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Agregar
+      </ion-button>
+
+      <!-- Quantity Controls (when in cart) -->
+      <div class="quantity-controls" *ngIf="isInCart">
+        <ion-button
+          class="quantity-btn"
+          size="small"
+          fill="outline"
+          (click)="onDecrement()"
+          [disabled]="quantity <= 1">
+          <ion-icon name="remove-outline"></ion-icon>
+        </ion-button>
+
+        <span class="quantity-display">{{ quantity }}</span>
+
+        <ion-button
+          class="quantity-btn"
+          size="small"
+          fill="outline"
+          (click)="onIncrement()"
+          [disabled]="quantity >= product.stock">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <!-- Out of Stock -->
+      <div class="out-of-stock" *ngIf="product.stock === 0">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <span>Sin Stock</span>
+      </div>
+    </div>
+  </div>
+</div>

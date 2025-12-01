@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -40,6 +40,11 @@ import { ProductService } from '../../services/product.service';
 import { ClientService } from '../../services/client.service';
 import { CartService, CartItem } from '../../services/cart.service';
 import { Product } from '../../core/models';
+import { ProductCardComponent } from '../../shared/components/product-card';
+import { SideCartComponent } from '../../shared/components/side-cart/side-cart.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { debounceTime, Subject } from 'rxjs';
 
 @Component({
@@ -70,24 +75,30 @@ import { debounceTime, Subject } from 'rxjs';
     IonText,
     IonFab,
     IonFabButton,
-    IonChip
+    IonChip,
+    ProductCardComponent,
+    SideCartComponent,
+    EmptyStateComponent,
+    ErrorStateComponent,
+    SkeletonComponent
   ]
 })
 export class PosPage implements OnInit {
+  private productService = inject(ProductService);
+  private clientService = inject(ClientService);
+  private cartService = inject(CartService);
+  private router = inject(Router);
+  private alertController = inject(AlertController);
+  private toastController = inject(ToastController);
+
   products: Product[] = [];
   cartItems: CartItem[] = [];
   loading = false;
   searchQuery = '';
+  cartOpen = false;
   private searchSubject = new Subject<string>();
 
-  constructor(
-    private productService: ProductService,
-    private clientService: ClientService,
-    private cartService: CartService,
-    private router: Router,
-    private alertController: AlertController,
-    private toastController: ToastController
-  ) {
+  constructor() {
     addIcons({
       cartOutline,
       addOutline,
@@ -99,8 +110,6 @@ export class PosPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loadProducts();
-    
     // Suscribirse al carrito
     this.cartService.cartItems$.subscribe(items => {
       this.cartItems = items;
@@ -114,6 +123,32 @@ export class PosPage implements OnInit {
         this.loadProducts();
       }
     });
+  }
+
+  ionViewWillEnter() {
+    // Recargar productos cada vez que se entra a la vista
+    // Esto actualiza el stock después de una venta
+    console.log('🔄 POS - Recargando productos...');
+    this.clearProductCache();
+    this.loadProducts();
+  }
+
+  /**
+   * Limpia la caché de productos para forzar recarga desde el backend
+   */
+  private clearProductCache(): void {
+    try {
+      // Limpiar todas las entradas de caché relacionadas con productos
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('cache_product')) {
+          localStorage.removeItem(key);
+        }
+      });
+      console.log('🧹 Caché de productos limpiada en POS');
+    } catch (error) {
+      console.warn('Error limpiando caché:', error);
+    }
   }
 
   loadProducts() {
@@ -201,9 +236,23 @@ export class PosPage implements OnInit {
   }
 
   goToCheckout() {
+    this.closeCart();
     if (!this.cartService.isEmpty()) {
       this.router.navigate(['/tabs/pos/checkout']);
     }
+  }
+
+  openCart() {
+    this.cartOpen = true;
+  }
+
+  closeCart() {
+    this.cartOpen = false;
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.loadProducts();
   }
 
   async addNewClient() {

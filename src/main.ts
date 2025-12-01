@@ -24,3 +24,8 @@ bootstrapApplication(AppComponent, {
     provideAuth(() => getAuth()),
   ],
 });
+
+// Register service worker for PWA
+if ('serviceWorker' in navigator && environment.production) {
+  navigator.serviceWorker.register('/ngsw-worker.js');
+}

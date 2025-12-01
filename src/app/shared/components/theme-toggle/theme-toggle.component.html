@@ -1,0 +1,12 @@
+<ion-button
+  fill="clear"
+  size="default"
+  (click)="toggleTheme()"
+  [attr.aria-label]="isDarkTheme ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+  class="theme-toggle">
+  <ion-icon
+    [name]="isDarkTheme ? 'sunny-outline' : 'moon-outline'"
+    slot="icon-only"
+    class="theme-toggle__icon">
+  </ion-icon>
+</ion-button>

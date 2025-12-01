@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 import { environment } from '../../environments/environment';
@@ -8,9 +8,9 @@ import { Sale, SaleDetail, SaleCreateRequest, PagedResponse } from '../core/mode
   providedIn: 'root'
 })
 export class SaleService {
-  private readonly endpoint = environment.endpoints.ventas;
+  private apiService = inject(ApiService);
 
-  constructor(private apiService: ApiService) {}
+  private readonly endpoint = environment.endpoints.ventas;
 
   /**
    * Obtiene todas las ventas

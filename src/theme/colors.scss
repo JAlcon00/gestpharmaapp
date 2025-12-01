@@ -1,0 +1,382 @@
+:root {
+  /* ═══════════════════════════════════════════════════════════════════════
+     COLORES PRINCIPALES
+     Estos colores definen la identidad visual de la aplicación
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  /* ━━━ BRAND COLORS: Nueva Paleta Moderna ━━━ */
+  --color-brand-primary: #00D9A3;    /* Verde turquesa vibrante - más moderno */
+  --color-brand-secondary: #667EEA;  /* Púrpura azulado - tecnológico */
+  --color-brand-accent: #FF6B9D;     /* Rosa coral - energético */
+
+  /* ━━━ PRIMARY: Verde Turquesa Moderno ━━━ */
+  --color-primary-50: #e0f7f0;
+  --color-primary-100: #b3f0d9;
+  --color-primary-200: #80e8c2;
+  --color-primary-300: #4ddfa8;
+  --color-primary-400: #26d795;
+  --color-primary-500: #00D9A3;  /* ← Color base principal */
+  --color-primary-600: #00c494;
+  --color-primary-700: #00af84;
+  --color-primary-800: #009a75;
+  --color-primary-900: #007a5e;
+
+  /* ━━━ SECONDARY: Púrpura Azulado Tecnológico ━━━ */
+  --color-secondary-50: #f0f2ff;
+  --color-secondary-100: #e0e4ff;
+  --color-secondary-200: #c7d0ff;
+  --color-secondary-300: #a8b8ff;
+  --color-secondary-400: #8fa1ff;
+  --color-secondary-500: #667EEA;  /* ← Color base secundario */
+  --color-secondary-600: #5a6fd3;
+  --color-secondary-700: #4e60b8;
+  --color-secondary-800: #42519d;
+  --color-secondary-900: #303c7a;
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     COLORES SEMÁNTICOS
+     Estos colores transmiten significado y estado
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  /* ━━━ SUCCESS: Confirmación, Operación Exitosa ━━━ */
+  --color-success-50: #e8f5e9;
+  --color-success-100: #c8e6c9;
+  --color-success-200: #a5d6a7;
+  --color-success-300: #81c784;
+  --color-success-400: #66bb6a;
+  --color-success-500: #4caf50;
+  --color-success-600: #43a047;
+  --color-success-700: #388e3c;
+  --color-success-800: #2e7d32;
+  --color-success-900: #1b5e20;
+
+  /* ━━━ WARNING: Advertencia, Stock Bajo, Precaución ━━━ */
+  --color-warning-50: #fff3e0;
+  --color-warning-100: #ffe0b2;
+  --color-warning-200: #ffcc80;
+  --color-warning-300: #ffb74d;
+  --color-warning-400: #ffa726;
+  --color-warning-500: #ff9800;
+  --color-warning-600: #fb8c00;
+  --color-warning-700: #f57c00;
+  --color-warning-800: #ef6c00;
+  --color-warning-900: #e65100;
+
+  /* ━━━ DANGER: Error, Crítico, Destructivo ━━━ */
+  --color-danger-50: #ffebee;
+  --color-danger-100: #ffcdd2;
+  --color-danger-200: #ef9a9a;
+  --color-danger-300: #e57373;
+  --color-danger-400: #ef5350;
+  --color-danger-500: #f44336;
+  --color-danger-600: #e53935;
+  --color-danger-700: #d32f2f;
+  --color-danger-800: #c62828;
+  --color-danger-900: #b71c1c;
+
+  /* ━━━ INFO: Información, Tips, Ayuda ━━━ */
+  --color-info-50: #e1f5fe;
+  --color-info-100: #b3e5fc;
+  --color-info-200: #81d4fa;
+  --color-info-300: #4fc3f7;
+  --color-info-400: #29b6f6;
+  --color-info-500: #03a9f4;
+  --color-info-600: #039be5;
+  --color-info-700: #0288d1;
+  --color-info-800: #0277bd;
+  --color-info-900: #01579b;
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     ESCALA DE GRISES (NEUTRALES)
+     Base para textos, fondos y bordes
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #eeeeee;
+  --color-gray-300: #e0e0e0;
+  --color-gray-400: #bdbdbd;
+  --color-gray-500: #9e9e9e;
+  --color-gray-600: #757575;
+  --color-gray-700: #616161;
+  --color-gray-800: #424242;
+  --color-gray-900: #212121;
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     COLORES DE FONDO (TEMA CLARO)
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --bg-primary: #ffffff;           /* Fondo principal de la app */
+  --bg-secondary: #f8f9fa;         /* Fondo secundario (secciones) */
+  --bg-tertiary: #f1f3f5;          /* Fondo terciario (cards, paneles) */
+  --bg-elevated: #ffffff;          /* Elementos elevados (modales, popups) */
+  --bg-overlay: rgba(0, 0, 0, 0.5); /* Overlay de modales */
+  --bg-disabled: #e0e0e0;          /* Elementos deshabilitados */
+  --bg-hover: rgba(0, 0, 0, 0.04); /* Hover en elementos */
+  --bg-active: rgba(0, 0, 0, 0.08); /* Elemento activo/presionado */
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     COLORES DE TEXTO (TEMA CLARO)
+     Cumplir con WCAG AAA para contraste
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --text-primary: #212121;         /* Texto principal (títulos, contenido) */
+  --text-secondary: #616161;       /* Texto secundario (subtítulos) */
+  --text-tertiary: #9e9e9e;        /* Texto terciario (metadata, timestamps) */
+  --text-disabled: #bdbdbd;        /* Texto deshabilitado */
+  --text-inverse: #ffffff;         /* Texto sobre fondos oscuros */
+   --text-link: #667EEA;           /* Links y texto interactivo */
+   --text-link-hover: #5a6fd3;      /* Links en hover */
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      SISTEMA DE ESPACIADO (Escala Fibonacci Modificada)
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   --spacing-xxs: 2px;
+   --spacing-xs: 4px;
+   --spacing-sm: 8px;
+   --spacing-md: 12px;
+   --spacing-base: 16px;
+   --spacing-lg: 24px;
+   --spacing-xl: 32px;
+   --spacing-2xl: 48px;
+   --spacing-3xl: 64px;
+   --spacing-4xl: 96px;
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      ANCHOS DE CONTENEDOR
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   --container-xs: 400px;
+   --container-sm: 640px;
+   --container-md: 768px;
+   --container-lg: 1024px;
+   --container-xl: 1280px;
+   --container-2xl: 1536px;
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      MÁRGENES SEMÁNTICOS
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   --margin-section: var(--spacing-3xl);
+   --margin-component: var(--spacing-lg);
+   --margin-item: var(--spacing-md);
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      SISTEMA DE BORDER RADIUS PROGRESIVO
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   --radius-none: 0;
+   --radius-xs: 4px;        /* Chips, badges */
+   --radius-sm: 8px;        /* Botones pequeños */
+   --radius-md: 12px;       /* Botones normales, inputs */
+   --radius-lg: 16px;       /* Cards, modales */
+   --radius-xl: 24px;       /* Cards destacados */
+   --radius-2xl: 32px;      /* Hero sections */
+   --radius-full: 9999px;   /* Botones circulares, avatares */
+   --radius-blob: 30% 70% 70% 30% / 30% 30% 70% 70%;  /* Formas orgánicas */
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      SOMBRAS CON PROFUNDIDAD Y COLOR
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   --shadow-xs: 0 1px 2px rgba(0, 217, 163, 0.05);
+   --shadow-sm: 0 2px 4px rgba(0, 217, 163, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+   --shadow-md: 0 4px 8px rgba(0, 217, 163, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+   --shadow-lg: 0 12px 24px rgba(0, 217, 163, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+   --shadow-xl: 0 20px 40px rgba(0, 217, 163, 0.2), 0 8px 16px rgba(0, 0, 0, 0.08);
+   --shadow-2xl: 0 32px 64px rgba(0, 217, 163, 0.25), 0 16px 32px rgba(0, 0, 0, 0.1);
+
+   /* Sombras internas para profundidad */
+   --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+   --shadow-inner-strong: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+
+   /* Glow effects */
+   --glow-primary: 0 0 20px rgba(0, 217, 163, 0.4);
+   --glow-success: 0 0 20px rgba(52, 199, 89, 0.4);
+   --glow-danger: 0 0 20px rgba(255, 59, 48, 0.4);
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      COLORES DE BORDE
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   --border-light: #e0e0e0;         /* Bordes sutiles */
+   --border-medium: #bdbdbd;        /* Bordes normales */
+   --border-dark: #757575;          /* Bordes destacados */
+   --border-focus: #667EEA;         /* Borde de elementos enfocados */
+   --border-error: #f44336;         /* Borde de error */
+
+  /* ═══════════════════════════════════════════════════════════════════════
+      GRADIENTES MODERNOS Y PROFESIONALES
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   /* Gradientes de marca principales */
+   --gradient-primary: linear-gradient(135deg, #00D9A3 0%, #00B8D4 100%);
+   --gradient-secondary: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+   --gradient-sunset: linear-gradient(135deg, #FF6B9D 0%, #FFA07A 100%);
+
+   /* Gradientes semánticos */
+   --gradient-success: linear-gradient(135deg, #00D9A3 0%, #52DE97 100%);
+   --gradient-warning: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+   --gradient-danger: linear-gradient(135deg, #FF6B9D 0%, #EE5A6F 100%);
+   --gradient-info: linear-gradient(135deg, #667EEA 0%, #8fa1ff 100%);
+
+   /* Gradientes sutiles para fondos */
+   --gradient-bg-soft: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+   --gradient-bg-card: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+
+   /* Gradiente glassmorphism */
+   --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+
+   /* ═══════════════════════════════════════════════════════════════════════
+      COLORES CONTEXTUALES MEJORADOS
+      ═══════════════════════════════════════════════════════════════════════ */
+
+   /* Colores de stock */
+   --color-stock-critical: #FF3B30;
+   --color-stock-low: #FF9500;
+   --color-stock-optimal: #34C759;
+
+   /* Colores de revenue */
+   --color-revenue-positive: #00D9A3;
+   --color-revenue-neutral: #8E8E93;
+   --color-revenue-negative: #FF3B30;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEMA OSCURO (DARK MODE)
+   Detectar preferencia del sistema operativo
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* ═══════════════════════════════════════════════════════════════════════
+        FONDOS OSCUROS MODERNOS (No negro puro)
+        ═══════════════════════════════════════════════════════════════════════ */
+
+    --bg-primary: #0A0E27;         /* Azul muy oscuro - moderno */
+    --bg-secondary: #111827;       /* Azul grisáceo */
+    --bg-tertiary: #1f2937;        /* Gris azulado */
+    --bg-elevated: #111827;        /* Modales y elementos flotantes */
+    --bg-overlay: rgba(10, 14, 39, 0.8);
+    --bg-disabled: #1f2937;
+    --bg-hover: rgba(102, 126, 234, 0.1);
+    --bg-active: rgba(102, 126, 234, 0.15);
+
+    /* ═══════════════════════════════════════════════════════════════════════
+        TEXTOS CLAROS CON MENOS CONTRASTE
+        ═══════════════════════════════════════════════════════════════════════ */
+
+    --text-primary: #f8fafc;       /* Blanco ligeramente azulado */
+    --text-secondary: #cbd5e1;     /* Gris claro */
+    --text-tertiary: #94a3b8;      /* Gris medio */
+    --text-disabled: #64748b;      /* Gris deshabilitado */
+    --text-inverse: #0f172a;       /* Texto sobre fondos claros */
+    --text-link: #8fa1ff;          /* Links más brillantes */
+    --text-link-hover: #a8b8ff;    /* Links en hover */
+
+    /* ═══════════════════════════════════════════════════════════════════════
+        BORDES OSCUROS
+        ═══════════════════════════════════════════════════════════════════════ */
+
+    --border-light: #1f2937;
+    --border-medium: #374151;
+    --border-dark: #4b5563;
+    --border-focus: #8fa1ff;
+    --border-error: #ef5350;
+
+    /* ═══════════════════════════════════════════════════════════════════════
+        GRADIENTES AJUSTADOS PARA TEMA OSCURO
+        ═══════════════════════════════════════════════════════════════════════ */
+
+    --gradient-bg-soft: linear-gradient(180deg, #0A0E27 0%, #111827 100%);
+    --gradient-bg-card: linear-gradient(145deg, #111827 0%, #1f2937 100%);
+
+    /* Sombras más sutiles en dark mode */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7), 0 8px 16px rgba(0, 0, 0, 0.4);
+    --shadow-2xl: 0 32px 64px rgba(0, 0, 0, 0.8), 0 16px 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CLASE PARA FORZAR TEMA OSCURO
+   Permite toggle manual del tema
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dark-theme,
+[data-theme="dark"] {
+  /* Fondos oscuros modernos */
+  --bg-primary: #0A0E27;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f2937;
+  --bg-elevated: #111827;
+  --bg-overlay: rgba(10, 14, 39, 0.8);
+  --bg-disabled: #1f2937;
+  --bg-hover: rgba(102, 126, 234, 0.1);
+  --bg-active: rgba(102, 126, 234, 0.15);
+
+  /* Textos con menos contraste */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-disabled: #64748b;
+  --text-inverse: #0f172a;
+  --text-link: #8fa1ff;
+  --text-link-hover: #a8b8ff;
+
+  /* Bordes oscuros */
+  --border-light: #1f2937;
+  --border-medium: #374151;
+  --border-dark: #4b5563;
+  --border-focus: #8fa1ff;
+  --border-error: #ef5350;
+
+  /* Gradientes para dark mode */
+  --gradient-bg-soft: linear-gradient(180deg, #0A0E27 0%, #111827 100%);
+  --gradient-bg-card: linear-gradient(145deg, #111827 0%, #1f2937 100%);
+
+  /* Sombras más sutiles */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7), 0 8px 16px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 32px 64px rgba(0, 0, 0, 0.8), 0 16px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CLASE PARA FORZAR TEMA CLARO
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.light-theme,
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f5;
+  --bg-elevated: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-disabled: #e0e0e0;
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-active: rgba(0, 0, 0, 0.08);
+
+  --text-primary: #212121;
+  --text-secondary: #616161;
+  --text-tertiary: #9e9e9e;
+  --text-disabled: #bdbdbd;
+  --text-inverse: #ffffff;
+   --text-link: #667EEA;
+   --text-link-hover: #5a6fd3;
+
+   --border-light: #e0e0e0;
+   --border-medium: #bdbdbd;
+   --border-dark: #757575;
+   --border-focus: #667EEA;
+   --border-error: #f44336;
+
+  --gradient-bg-soft: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  --gradient-bg-card: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+}

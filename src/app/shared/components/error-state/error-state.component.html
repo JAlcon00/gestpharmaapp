@@ -1,0 +1,41 @@
+<div class="error-state" [class]="'error-state--' + severity">
+  <!-- Ilustración de error -->
+  <div class="error-state__illustration">
+    <div class="illustration-container" [innerHTML]="getIllustration()"></div>
+  </div>
+
+  <!-- Contenido del error -->
+  <div class="error-state__content">
+    <!-- Título del error -->
+    <h3 class="error-state__title">{{ title }}</h3>
+
+    <!-- Descripción del error -->
+    <p class="error-state__description" *ngIf="description">
+      {{ description }}
+    </p>
+
+    <!-- Código de error (solo en desarrollo) -->
+    <p class="error-state__code" *ngIf="errorCode && showErrorCode">
+      Código: {{ errorCode }}
+    </p>
+
+    <!-- Acciones -->
+    <div class="error-state__actions">
+      <app-button
+        *ngIf="actionLabel"
+        [variant]="actionVariant"
+        [iconStart]="actionIcon"
+        (clicked)="actionClick.emit()">
+        {{ actionLabel }}
+      </app-button>
+
+      <app-button
+        *ngIf="secondaryActionLabel"
+        variant="ghost"
+        [iconStart]="secondaryActionIcon"
+        (clicked)="secondaryActionClick.emit()">
+        {{ secondaryActionLabel }}
+      </app-button>
+    </div>
+  </div>
+</div>

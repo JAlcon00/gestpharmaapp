@@ -1,0 +1,315 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILIDAD: SOLO LECTURA DE PANTALLA (SR-ONLY)
+   Oculta visualmente pero accesible para lectores de pantalla
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sr-only,
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Versión enfocable (útil para skip links) */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ALTO CONTRASTE (HIGH CONTRAST)
+   Cumple WCAG AAA (7:1 ratio mínimo)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.high-contrast {
+  /* Colores principales con máximo contraste */
+  --color-primary-500: #000000;
+  --color-secondary-500: #0000ff;
+
+  /* Textos */
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --text-tertiary: #333333;
+  --text-inverse: #ffffff;
+
+  /* Fondos */
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0f0;
+
+  /* Bordes más gruesos y oscuros */
+  --border-light: #000000;
+  --border-medium: #000000;
+  --border-dark: #000000;
+
+  /* Eliminar sombras y efectos sutiles */
+  * {
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Bordes más definidos en elementos interactivos */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    border: 2px solid #000000 !important;
+  }
+
+  /* Links muy visibles */
+  a {
+    color: #0000ff !important;
+    text-decoration: underline !important;
+    font-weight: var(--font-weight-bold);
+
+    &:visited {
+      color: #551a8b !important;
+    }
+
+    &:hover,
+    &:focus {
+      color: #ff0000 !important;
+      background-color: #ffff00 !important;
+    }
+  }
+
+  /* Iconos con borde */
+  ion-icon {
+    filter: drop-shadow(0 0 1px #000000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEXTO GRANDE (LARGE TEXT)
+   Aumenta tamaños para mejor legibilidad
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.large-text {
+  /* Aumentar base font-size en 125% */
+  font-size: 125% !important;
+
+  /* Ajustar todos los tamaños proporcionalmente */
+  h1, .h1 { font-size: calc(var(--font-size-3xl) * 1.25) !important; }
+  h2, .h2 { font-size: calc(var(--font-size-2xl) * 1.25) !important; }
+  h3, .h3 { font-size: calc(var(--font-size-xl) * 1.25) !important; }
+  h4, .h4 { font-size: calc(var(--font-size-lg) * 1.25) !important; }
+  h5, .h5 { font-size: calc(var(--font-size-md) * 1.25) !important; }
+  h6, .h6 { font-size: calc(var(--font-size-base) * 1.25) !important; }
+
+  p, span, div, li {
+    font-size: calc(var(--font-size-base) * 1.25) !important;
+  }
+
+  /* Aumentar line-height para mejor legibilidad */
+  p {
+    line-height: var(--line-height-loose) !important;
+  }
+
+  /* Aumentar espaciado entre elementos */
+  * + * {
+    margin-top: calc(var(--spacing-md) * 1.25);
+  }
+
+  /* Botones más grandes */
+  button,
+  .btn,
+  ion-button {
+    min-height: 56px !important;
+    font-size: calc(var(--font-size-base) * 1.25) !important;
+    padding: var(--spacing-md) var(--spacing-lg) !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOVIMIENTO REDUCIDO (REDUCED MOTION)
+   Elimina animaciones para usuarios sensibles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.reduced-motion,
+.reduced-motion * {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Desactivar scroll suave */
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INDICADORES DE FOCO (FOCUS INDICATORS)
+   Indicadores visibles y prominentes para navegación por teclado
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Foco visible en todos los elementos interactivos */
+.focus-indicators,
+.using-keyboard {
+
+  *:focus-visible {
+    outline: 3px solid var(--color-primary-500) !important;
+    outline-offset: 3px !important;
+    border-radius: 4px;
+    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.2) !important;
+    z-index: 1;
+  }
+
+  /* Foco en links */
+  a:focus-visible {
+    background-color: var(--color-primary-50);
+    padding: 2px 4px;
+    margin: -2px -4px;
+  }
+
+  /* Foco en botones */
+  button:focus-visible,
+  ion-button:focus-visible {
+    transform: scale(1.05);
+  }
+
+  /* Foco en inputs */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    border-width: 3px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SKIP LINKS (SALTAR NAVEGACIÓN)
+   Permiten a usuarios de teclado saltar contenido repetitivo
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 10000;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-primary-500);
+  color: var(--text-inverse);
+  text-decoration: none;
+  font-weight: var(--font-weight-semibold);
+  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+  transition: var(--transition-base);
+
+  &:focus {
+    top: 0;
+    outline: 3px solid var(--color-primary-300);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    background-color: var(--color-primary-700);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODO LECTOR DE PANTALLA (SCREEN READER MODE)
+   Optimizaciones específicas para lectores de pantalla
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.screen-reader-mode {
+  /* Ocultar elementos decorativos */
+  .decorative-icon,
+  .background-pattern {
+    display: none !important;
+  }
+
+  /* Mejorar contraste en elementos interactivos */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    border: 2px solid var(--border-medium) !important;
+  }
+
+  /* Asegurar que los headings sean claramente identificables */
+  h1, h2, h3, h4, h5, h6 {
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: var(--spacing-xs);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILIDADES DE ACCESIBILIDAD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Texto alternativo visible solo para lectores de pantalla */
+.sr-desc {
+  @extend .sr-only;
+}
+
+/* Indicador de carga accesible */
+.loading-indicator {
+  position: relative;
+
+  &::after {
+    content: 'Cargando...';
+    @extend .sr-only;
+  }
+}
+
+/* Estado expandido/colapsado accesible */
+[aria-expanded="true"]::before {
+  content: 'Contraído';
+  @extend .sr-only;
+}
+
+[aria-expanded="false"]::before {
+  content: 'Expandido';
+  @extend .sr-only;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MEDIA QUERIES PARA ACCESIBILIDAD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .skip-link {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .large-text {
+    /* En móviles, aumentar menos para evitar scroll horizontal */
+    font-size: 112.5% !important;
+
+    h1, .h1 { font-size: calc(var(--font-size-3xl) * 1.125) !important; }
+    h2, .h2 { font-size: calc(var(--font-size-2xl) * 1.125) !important; }
+  }
+}
+
+/* Soporte para impresión */
+@media print {
+  .skip-link,
+  .sr-only {
+    display: none !important;
+  }
+
+  .high-contrast {
+    /* Asegurar buen contraste en impresión */
+    * {
+      color: #000000 !important;
+      background: #ffffff !important;
+      border-color: #000000 !important;
+    }
+  }
+}

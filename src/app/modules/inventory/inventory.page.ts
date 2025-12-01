@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
   IonContent,
   IonButton,
   IonIcon,
@@ -13,29 +12,19 @@ import {
   IonSegment,
   IonSegmentButton,
   IonLabel,
-  IonList,
-  IonItem,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonBadge,
-  IonChip,
   IonRefresher,
   IonRefresherContent,
   IonFab,
   IonFabButton,
-  IonSpinner,
   AlertController,
-  ToastController,
-  ModalController
+  ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { 
-  add, 
-  search, 
-  filterOutline, 
-  createOutline, 
+import {
+  add,
+  search,
+  filterOutline,
+  createOutline,
   trashOutline,
   alertCircleOutline,
   checkmarkCircle,
@@ -45,6 +34,8 @@ import {
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
 import { Product, Category } from '../../core/models';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
 
 @Component({
   selector: 'app-inventory',
@@ -64,46 +55,50 @@ import { Product, Category } from '../../core/models';
     IonSegment,
     IonSegmentButton,
     IonLabel,
-    IonList,
-    IonItem,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonBadge,
-    IonChip,
     IonRefresher,
     IonRefresherContent,
     IonFab,
     IonFabButton,
-    IonSpinner
+    ProductListComponent,
+    CategoryListComponent
   ]
 })
 export class InventoryPage implements OnInit {
+  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+  private alertController = inject(AlertController);
+  private toastController = inject(ToastController);
+
+  // Estado de productos
   products: Product[] = [];
   categories: Category[] = [];
   filteredProducts: Product[] = [];
-  
+
+  // Estado de UI
   searchTerm: string = '';
   selectedCategory: string = 'all';
   selectedView: string = 'products'; // 'products' | 'categories'
-  
+
+  // Estado de carga
   loading: boolean = false;
   error: string = '';
-  
+
   // Paginación
   page: number = 0;
   size: number = 20;
   totalPages: number = 0;
 
-  constructor(
-    private productService: ProductService,
-    private categoryService: CategoryService,
-    private alertController: AlertController,
-    private toastController: ToastController,
-    private modalController: ModalController,
-    private router: Router
-  ) {
+  // Estado calculado para componentes dumb
+  get productCountByCategory(): Map<number, number> {
+    const countMap = new Map<number, number>();
+    this.products.forEach(product => {
+      const count = countMap.get(product.categoriaId) || 0;
+      countMap.set(product.categoriaId, count + 1);
+    });
+    return countMap;
+  }
+
+  constructor() {
     addIcons({ 
       add, 
       search, 
@@ -198,21 +193,46 @@ export class InventoryPage implements OnInit {
     event.target.complete();
   }
 
-  getCategoryName(categoryId: number): string {
-    const category = this.categories.find(c => c.id === categoryId);
-    return category?.nombre || 'Sin categoría';
+  // ═══════════════════════════════════════════════════════════════════════
+  // EVENT HANDLERS PARA COMPONENTES DUMB
+  // ═══════════════════════════════════════════════════════════════════════
+
+  onProductSelected(product: Product): void {
+    // TODO: Navegar a detalle de producto
+    console.log('Producto seleccionado:', product);
   }
 
-  getStockStatus(stock: number, stockMinimo: number): string {
-    if (stock <= 0) return 'danger';
-    if (stock <= stockMinimo) return 'warning';
-    return 'success';
+  onEditProduct(product: Product): void {
+    this.showProductForm(product.categoriaId, 'edit', product);
   }
 
-  getStockLabel(stock: number, stockMinimo: number): string {
-    if (stock <= 0) return 'Agotado';
-    if (stock <= stockMinimo) return 'Stock bajo';
-    return 'Disponible';
+  onDeleteProduct(product: Product): void {
+    this.deleteProduct(product);
+  }
+
+  onAddProduct(): void {
+    this.addProduct();
+  }
+
+  onRetryLoad(): void {
+    this.loadProducts();
+  }
+
+  onCategorySelected(category: Category): void {
+    // TODO: Navegar a vista de categoría
+    console.log('Categoría seleccionada:', category);
+  }
+
+  onEditCategory(category: Category): void {
+    this.editCategory(category);
+  }
+
+  onDeleteCategory(category: Category): void {
+    this.deleteCategory(category);
+  }
+
+  onAddCategory(): void {
+    this.addCategory();
   }
 
   async addProduct() {

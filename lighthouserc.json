@@ -1,0 +1,58 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm run start",
+      "startServerReadyPattern": "Ionic server running",
+      "startServerReadyTimeout": 30000,
+      "url": [
+        "http://localhost:8100",
+        "http://localhost:8100/tabs/dashboard",
+        "http://localhost:8100/tabs/inventory",
+        "http://localhost:8100/tabs/pos"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "cpuSlowdownMultiplier": 1
+        }
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", {"minScore": 0.9}],
+        "categories:accessibility": ["error", {"minScore": 0.95}],
+        "categories:best-practices": ["error", {"minScore": 0.9}],
+        "categories:seo": ["error", {"minScore": 0.9}],
+
+        // Performance metrics específicos
+        "first-contentful-paint": ["error", {"maxNumericValue": 2000}],
+        "largest-contentful-paint": ["error", {"maxNumericValue": 2500}],
+        "cumulative-layout-shift": ["error", {"maxNumericValue": 0.1}],
+        "total-blocking-time": ["error", {"maxNumericValue": 300}],
+        "speed-index": ["error", {"maxNumericValue": 3000}],
+
+        // Bundle size (si está disponible)
+        "resource-summary:script:size": ["warn", {"maxNumericValue": 500000}],
+        "resource-summary:stylesheet:size": ["warn", {"maxNumericValue": 50000}],
+        "resource-summary:image:size": ["warn", {"maxNumericValue": 1000000}],
+
+        // Best practices
+        "uses-http2": "error",
+        "uses-text-compression": "error",
+        "efficient-animated-content": "error",
+        "offscreen-images": "warn",
+        "unminified-css": "error",
+        "unminified-javascript": "error",
+        "unused-css-rules": "warn",
+        "unused-javascript": "warn",
+        "modern-image-formats": "warn"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

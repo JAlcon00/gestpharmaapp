@@ -35,3 +35,45 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/**
+ * GESTPHARMA DESIGN SYSTEM
+ * Sistema de diseño profesional para la aplicación
+ */
+@import 'theme/colors.scss';
+@import 'theme/typography.scss';
+@import 'theme/accessibility.scss';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ESTILOS DE TOAST
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.toast-success,
+.toast-error,
+.toast-warning,
+.toast-info {
+  --border-radius: var(--border-radius-lg);
+  --box-shadow: var(--shadow-xl);
+  --background: var(--bg-elevated);
+
+  ion-icon {
+    font-size: 24px;
+    margin-right: var(--spacing-sm);
+  }
+
+  .toast-message {
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+/* Animación de entrada más suave */
+@keyframes toastEnter {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

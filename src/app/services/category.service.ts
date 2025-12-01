@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 import { environment } from '../../environments/environment';
@@ -8,9 +8,9 @@ import { Category, PagedResponse } from '../core/models';
   providedIn: 'root'
 })
 export class CategoryService {
-  private readonly endpoint = environment.endpoints.categorias;
+  private apiService = inject(ApiService);
 
-  constructor(private apiService: ApiService) {}
+  private readonly endpoint = environment.endpoints.categorias;
 
   /**
    * Obtiene todas las categorías

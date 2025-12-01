@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 import { environment } from '../../environments/environment';
@@ -8,9 +8,9 @@ import { Client, ClientCreateRequest, ClientUpdateRequest } from '../core/models
   providedIn: 'root'
 })
 export class ClientService {
-  private readonly endpoint = environment.endpoints.clientes;
+  private apiService = inject(ApiService);
 
-  constructor(private apiService: ApiService) {}
+  private readonly endpoint = environment.endpoints.clientes;
 
   /**
    * Obtiene todos los clientes

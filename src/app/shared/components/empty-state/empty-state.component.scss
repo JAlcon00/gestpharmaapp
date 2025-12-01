@@ -1,0 +1,193 @@
+// Empty State Component - Ilustrado y Moderno
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  min-height: 400px;
+  background: var(--gradient-glass);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: emptyStateEnter 600ms var(--ease-out);
+
+  // Ilustración SVG personalizada
+  &__illustration {
+    margin-bottom: var(--spacing-2xl);
+
+    .illustration-container {
+      width: 200px;
+      height: 160px;
+      animation: illustrationFloat 4s ease-in-out infinite;
+      filter: drop-shadow(var(--shadow-sm));
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  // Contenido
+  &__content {
+    max-width: 500px;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+  }
+
+  &__description {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-2xl);
+    max-width: 480px;
+  }
+
+  // Acciones
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: center;
+
+    app-button {
+      min-width: 200px;
+      font-weight: var(--font-weight-semibold);
+      box-shadow: var(--shadow-md);
+      transition: all var(--duration-fast) var(--ease-out);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+    }
+  }
+
+  // Variantes por tipo
+  &--products {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 0s;
+    }
+  }
+
+  &--sales {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 0.5s;
+    }
+  }
+
+  &--cart {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 1s;
+    }
+  }
+
+  &--search {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 1.5s;
+    }
+  }
+
+  &--reports {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 2s;
+    }
+  }
+
+  &--clients {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 2.5s;
+    }
+  }
+
+  &--inventory {
+    .empty-state__illustration .illustration-container {
+      animation-delay: 3s;
+    }
+  }
+}
+
+// Animaciones
+@keyframes emptyStateEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes illustrationFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-12px) rotate(-1deg);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .empty-state {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    min-height: 350px;
+
+    &__illustration .illustration-container {
+      width: 160px;
+      height: 128px;
+    }
+
+    &__title {
+      font-size: var(--font-size-xl);
+    }
+
+    &__description {
+      font-size: var(--font-size-base);
+    }
+
+    &__actions {
+      app-button {
+        min-width: 180px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .empty-state {
+    padding: var(--spacing-xl) var(--spacing-md);
+    min-height: 300px;
+
+    &__illustration .illustration-container {
+      width: 140px;
+      height: 112px;
+    }
+
+    &__title {
+      font-size: var(--font-size-lg);
+    }
+
+    &__actions {
+      app-button {
+        min-width: 160px;
+      }
+    }
+  }
+}

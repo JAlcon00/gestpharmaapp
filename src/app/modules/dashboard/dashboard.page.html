@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <app-theme-toggle></app-theme-toggle>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -10,120 +13,205 @@
   </ion-refresher>
 
   <div class="dashboard-container ion-padding">
-    <!-- Loading -->
+    <!-- Loading Skeletons -->
     @if (loading) {
-    <div class="loading-container">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando dashboard...</p>
+    <div class="dashboard-skeletons">
+      <!-- KPI Cards Skeletons -->
+      <div class="kpi-skeletons">
+        <app-skeleton variant="card" *ngFor="let i of [1,2,3,4,5,6]"></app-skeleton>
+      </div>
+
+      <!-- Chart Skeletons -->
+      <div class="charts-skeletons">
+        <app-skeleton variant="chart" width="100%" height="300px"></app-skeleton>
+        <app-skeleton variant="chart" width="100%" height="300px"></app-skeleton>
+      </div>
     </div>
     }
 
     <!-- Error -->
     @if (error && !loading) {
-    <ion-card color="danger">
-      <ion-card-content>
-        <ion-icon name="warning-outline"></ion-icon>
-        <p>{{ error }}</p>
-        <ion-button (click)="loadDashboard()" fill="outline" color="light">
+    <app-card variant="outlined">
+      <div slot="content">
+        <p class="text-danger">{{ error }}</p>
+        <app-button (clicked)="loadDashboard()" variant="secondary" iconStart="refresh-outline">
           Reintentar
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
+        </app-button>
+      </div>
+    </app-card>
     }
 
-    <!-- KPIs Grid -->
+    <!-- KPIs Grid Asimétrico -->
     @if (dashboardData && !loading) {
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-card class="kpi-card">
-            <ion-card-content>
-              <ion-icon name="trending-up-outline" color="success"></ion-icon>
-              <h2>{{ dashboardData.totalVentasHoy | currency:'MXN':'symbol':'1.2-2' }}</h2>
-              <p>Ventas Hoy</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
+    <div class="kpi-grid">
+       <!-- Hero Card - Ventas Hoy (Destacada) -->
+        <app-kpi-card
+          type="sales"
+          label="Ventas Hoy"
+          [value]="dashboardData.totalVentasHoy"
+          [trend]="15.3"
+          [isHero]="true"
+          [sparklineData]="[45000, 52000, 48000, 61000, 55000, 52750]">
+        </app-kpi-card>
 
-        <ion-col size="6">
-          <ion-card class="kpi-card">
-            <ion-card-content>
-              <ion-icon name="cube-outline" color="primary"></ion-icon>
-              <h2>{{ dashboardData.totalProductos }}</h2>
-              <p>Productos</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
+        <!-- Secondary Cards -->
+        <app-kpi-card
+          type="products"
+          label="Productos"
+          [value]="dashboardData.totalProductos"
+          subtitle="En inventario">
+        </app-kpi-card>
 
-        <ion-col size="6">
-          <ion-card class="kpi-card" [class.warning]="dashboardData.productosStockBajo > 0">
-            <ion-card-content>
-              <ion-icon name="cart-outline" [color]="dashboardData.productosStockBajo > 0 ? 'warning' : 'medium'"></ion-icon>
-              <h2>{{ dashboardData.productosStockBajo }}</h2>
-              <p>Stock Bajo</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
+        <app-kpi-card
+          type="stock"
+          label="Stock Bajo"
+          [value]="dashboardData.productosStockBajo"
+          [trend]="dashboardData.productosStockBajo > 5 ? -12.5 : 0"
+          subtitle="Requieren atención">
+        </app-kpi-card>
 
-        <ion-col size="6">
-          <ion-card class="kpi-card">
-            <ion-card-content>
-              <ion-icon name="people-outline" color="tertiary"></ion-icon>
-              <h2>{{ dashboardData.totalClientes }}</h2>
-              <p>Clientes</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
+        <app-kpi-card
+          type="clients"
+          label="Clientes"
+          [value]="dashboardData.totalClientes"
+          [trend]="8.2"
+          subtitle="Registrados">
+        </app-kpi-card>
 
-      <!-- Ventas Semanales y Mensuales -->
-      <ion-row>
-        <ion-col size="6">
-          <ion-card class="stat-card">
-            <ion-card-content>
-              <p class="stat-label">Ventas Semana</p>
-              <h3>{{ dashboardData.totalVentasSemana | currency:'MXN':'symbol':'1.2-2' }}</h3>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
+        <!-- Revenue Cards -->
+        <app-kpi-card
+          type="revenue"
+          label="Ventas Semana"
+          [value]="dashboardData.totalVentasSemana"
+          [trend]="22.1">
+        </app-kpi-card>
 
-        <ion-col size="6">
-          <ion-card class="stat-card">
-            <ion-card-content>
-              <p class="stat-label">Ventas Mes</p>
-              <h3>{{ dashboardData.totalVentasMes | currency:'MXN':'symbol':'1.2-2' }}</h3>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    }
+        <app-kpi-card
+          type="revenue"
+          label="Ventas Mes"
+          [value]="dashboardData.totalVentasMes"
+          [trend]="18.7">
+        </app-kpi-card>
+    </div>
 
-    <!-- Acciones Rápidas -->
-    @if (!loading) {
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Acciones Rápidas</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-button expand="block" routerLink="/tabs/pos">
-          <ion-icon name="cart-outline" slot="start"></ion-icon>
-          Nueva Venta
-        </ion-button>
-        
-        <ion-button expand="block" fill="outline" routerLink="/tabs/inventory">
-          <ion-icon name="cube-outline" slot="start"></ion-icon>
-          Ver Inventario
-        </ion-button>
+      <!-- Gráficos Interactivos -->
+      <div class="charts-grid">
+        <!-- Gráfico de Ventas Principales -->
+        <ion-card class="chart-card chart-card--primary">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="trending-up-outline"></ion-icon>
+              Ventas de los Últimos 7 Días
+            </ion-card-title>
+            <ion-card-subtitle>Seguimiento diario de ingresos</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="chart-container">
+              <canvas #salesChart></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
 
-        @if (dashboardData && dashboardData.productosStockBajo > 0) {
-        <ion-button expand="block" fill="outline" routerLink="/tabs/reports" color="warning">
-          <ion-icon name="warning-outline" slot="start"></ion-icon>
-          Ver Productos con Stock Bajo
-        </ion-button>
-        }
-      </ion-card-content>
-    </ion-card>
-    }
+        <!-- Gráfico de Productos Más Vendidos -->
+        <ion-card class="chart-card chart-card--secondary">
+          <ion-card-header>
+            <ion-card-title>
+              <ion-icon name="stats-chart-outline"></ion-icon>
+              Top Productos
+            </ion-card-title>
+            <ion-card-subtitle>Productos más vendidos esta semana</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="top-products-chart">
+              @for (product of topProducts.slice(0, 5); track product.productoId) {
+              <div class="product-bar">
+                <div class="product-info">
+                  <span class="product-name">{{ product.nombreProducto }}</span>
+                  <span class="product-sales">{{ product.cantidadVendida }} vendidos</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill"
+                       [style.width.%]="(product.cantidadVendida / (topProducts[0]?.cantidadVendida || 1)) * 100">
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+     <!-- Ventas Recientes y Productos Top -->
+     <ion-grid>
+       <ion-row>
+         <ion-col size="6">
+           <ion-card>
+             <ion-card-header>
+               <ion-card-title>
+                 <ion-icon name="time-outline"></ion-icon>
+                 Ventas Recientes
+               </ion-card-title>
+             </ion-card-header>
+             <ion-card-content class="no-padding">
+               <ion-list>
+                 @for (sale of recentSales; track sale.id) {
+                 <ion-item>
+                   <ion-label>
+                     <h3>{{ sale.total | currency:'MXN':'symbol':'1.2-2' }}</h3>
+                     <p>{{ sale.fechaVenta | date:'short' }}</p>
+                   </ion-label>
+                   <ion-badge slot="end" color="success">{{ sale.estado }}</ion-badge>
+                 </ion-item>
+                 }
+                 @if (recentSales.length === 0) {
+                 <ion-item>
+                   <ion-label>
+                     <p>No hay ventas recientes</p>
+                   </ion-label>
+                 </ion-item>
+                 }
+               </ion-list>
+             </ion-card-content>
+           </ion-card>
+         </ion-col>
+
+         <ion-col size="6">
+           <ion-card>
+             <ion-card-header>
+               <ion-card-title>
+                 <ion-icon name="trending-up-outline"></ion-icon>
+                 Productos Más Vendidos
+               </ion-card-title>
+             </ion-card-header>
+             <ion-card-content class="no-padding">
+               <ion-list>
+                 @for (product of topProducts; track product.productoId) {
+                 <ion-item>
+                   <ion-label>
+                     <h3>{{ product.nombreProducto }}</h3>
+                     <p>{{ product.cantidadVendida }} vendidos</p>
+                   </ion-label>
+                   <ion-badge slot="end" color="primary">
+                     {{ product.totalVentas | currency:'MXN':'symbol':'1.2-2' }}
+                   </ion-badge>
+                 </ion-item>
+                 }
+                 @if (topProducts.length === 0) {
+                 <ion-item>
+                   <ion-label>
+                     <p>No hay datos disponibles</p>
+                   </ion-label>
+                 </ion-item>
+                 }
+               </ion-list>
+             </ion-card-content>
+           </ion-card>
+         </ion-col>
+       </ion-row>
+     </ion-grid>
+     }
+
+    <!-- Quick Actions FAB -->
+    <app-quick-actions></app-quick-actions>
   </div>
 </ion-content>

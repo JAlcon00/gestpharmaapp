@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Injector } from '@angular/core';
 import { BehaviorSubject, Observable, tap, catchError, throwError, of, fromEvent, merge, timer, from, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { ApiService } from './api.service';
@@ -12,12 +12,17 @@ import {
 } from '../models';
 
 // Firebase imports
-import { Auth, GoogleAuthProvider, signInWithPopup, UserCredential } from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, UserCredential } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiService = inject(ApiService);
+  private storageService = inject(StorageService);
+  private router = inject(Router);
+  private injector = inject(Injector);
+
   private authStateSubject = new BehaviorSubject<AuthState>({
     user: null,
     token: null,
@@ -33,13 +38,46 @@ export class AuthService {
   // Inyectar Firebase Auth
   private auth: Auth = inject(Auth);
 
-  constructor(
-    private apiService: ApiService,
-    private storageService: StorageService,
-    private router: Router
-  ) {
+  constructor() {
     this.initializeAuth();
     this.setupInactivityTimer();
+    this.handleGoogleRedirect();
+  }
+
+  /**
+   * Maneja el resultado de redirect de Google al inicializar el servicio
+   */
+  private handleGoogleRedirect(): void {
+    getRedirectResult(this.auth).then((credential) => {
+      if (credential && localStorage.getItem('google_login_attempt') === 'true') {
+        localStorage.removeItem('google_login_attempt');
+        
+        const googleUser = credential.user;
+        const googleAuthData = {
+          email: googleUser.email!,
+          nombre: googleUser.displayName || googleUser.email!.split('@')[0],
+          uid: googleUser.uid,
+          photoURL: googleUser.photoURL || undefined
+        };
+
+        this.apiService.post<any>('/usuarios/google-auth', googleAuthData).subscribe({
+          next: (response) => {
+            if (response && response.token && response.usuario) {
+              this.setAuthData(response.token, response.usuario, response.refreshToken);
+              this.resetInactivityTimer();
+              console.log('✅ Sesión iniciada con Google (redirect):', response.usuario);
+              this.router.navigate(['/tabs']);
+            }
+          },
+          error: (error) => {
+            console.error('Error autenticando con backend:', error);
+          }
+        });
+      }
+    }).catch((error) => {
+      console.error('Error procesando resultado de redirect:', error);
+      localStorage.removeItem('google_login_attempt');
+    });
   }
 
   /**
@@ -169,6 +207,7 @@ export class AuthService {
 
   /**
    * Inicia sesión con Google usando Firebase
+   * Intenta con popup primero, si falla usa redirect
    */
   loginWithGoogle(): Observable<any> {
     const provider = new GoogleAuthProvider();
@@ -176,49 +215,33 @@ export class AuthService {
       prompt: 'select_account'
     });
 
-    // Convertir la promesa de Firebase a Observable
+    // Intentar con popup primero
     return from(signInWithPopup(this.auth, provider)).pipe(
       switchMap((credential: UserCredential) => {
-        // Extraer datos del usuario de Google
-        const googleUser = credential.user;
-        const googleAuthData = {
-          email: googleUser.email!,
-          nombre: googleUser.displayName || googleUser.email!.split('@')[0],
-          uid: googleUser.uid,
-          photoURL: googleUser.photoURL || undefined
-        };
-
-        console.log('✅ Usuario de Google autenticado:', googleAuthData);
-
-        // Enviar al backend para crear/obtener usuario con rol USUARIO (3)
-        return this.apiService.post<any>('/usuarios/google-auth', googleAuthData).pipe(
-          tap(response => {
-            // El interceptor ya extrae el 'data' del backend
-            if (response && response.token && response.usuario) {
-              this.setAuthData(
-                response.token,
-                response.usuario,
-                response.refreshToken
-              );
-              // Iniciar timer de inactividad
-              this.resetInactivityTimer();
-              console.log('✅ Sesión iniciada con Google:', response.usuario);
-            }
-          })
-        );
+        return this.processGoogleCredential(credential);
       }),
       catchError(error => {
-        console.error('❌ Error en login con Google:', error);
+        console.error('❌ Error con popup, intentando con redirect...', error);
 
-        // Mensajes de error más amigables
+        // Si falla el popup, usar redirect
+        if (error.code === 'auth/popup-blocked' || 
+            error.code === 'auth/popup-closed-by-user' ||
+            error.code === 'auth/cancelled-popup-request') {
+          
+          // Guardar que estamos intentando login con Google
+          localStorage.setItem('google_login_attempt', 'true');
+          
+          // Iniciar redirect
+          signInWithRedirect(this.auth, provider);
+          
+          // Retornar observable vacío ya que el redirect interrumpe el flujo
+          return of(null);
+        }
+
+        // Para otros errores, propagar
         let errorMessage = 'Error al iniciar sesión con Google';
-
         if (error.code === 'auth/popup-closed-by-user') {
           errorMessage = 'Ventana de inicio de sesión cerrada';
-        } else if (error.code === 'auth/cancelled-popup-request') {
-          errorMessage = 'Inicio de sesión cancelado';
-        } else if (error.code === 'auth/popup-blocked') {
-          errorMessage = 'La ventana emergente fue bloqueada. Permite ventanas emergentes para este sitio.';
         } else if (error.error) {
           errorMessage = error.error;
         }
@@ -227,6 +250,37 @@ export class AuthService {
       })
     );
   }
+
+  /**
+   * Procesa las credenciales de Google y autentica en el backend
+   */
+  private processGoogleCredential(credential: UserCredential): Observable<any> {
+    const googleUser = credential.user;
+    const googleAuthData = {
+      email: googleUser.email!,
+      nombre: googleUser.displayName || googleUser.email!.split('@')[0],
+      uid: googleUser.uid,
+      photoURL: googleUser.photoURL || undefined
+    };
+
+    console.log('✅ Usuario de Google autenticado:', googleAuthData);
+
+    return this.apiService.post<any>('/usuarios/google-auth', googleAuthData).pipe(
+      tap(response => {
+        if (response && response.token && response.usuario) {
+          this.setAuthData(
+            response.token,
+            response.usuario,
+            response.refreshToken
+          );
+          this.resetInactivityTimer();
+          console.log('✅ Sesión iniciada con Google:', response.usuario);
+        }
+      })
+    );
+  }
+
+
 
   /**
    * Cierra sesión
